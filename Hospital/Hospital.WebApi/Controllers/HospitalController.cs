@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -20,32 +21,40 @@ namespace Hospital.WebApi.Controllers
             NpgsqlConnection connection = new NpgsqlConnection(connectionString);
 
             List<Patient> patientsList = new List<Patient>();
-
-            using (connection)
-            {
-                NpgsqlCommand command = new NpgsqlCommand();
-                command.Connection = connection;
-                command.CommandText = "SELECT * FROM \"Hospital\".\"Patient\"";
-                connection.Open();
-
-                NpgsqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
+            try
                 {
-                    patientsList.Add(
-                        new Patient()
+                using (connection)
+                {
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    command.CommandText = "SELECT * FROM \"Hospital\".\"Patient\"";
+                    connection.Open();
+
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
                     {
-                        Id = (Guid)reader["Id"],
-                        FirstName = (string)reader["FirstName"],
-                        LastName = (string)reader["LastName"],
-                        DOB = (DateTime)reader["DOB"],
-                        PhoneNumber = (string)reader["PhoneNumber"],
-                        EmergencyContact = (string)reader["EmergencyContact"],
+                        patientsList.Add(
+                            new Patient()
+                            {
 
-                        });
+                                Id = (Guid)reader["Id"],
+                                FirstName = (string)reader["FirstName"],
+                                LastName = (string)reader["LastName"],
+                                DOB = (DateTime)reader["DOB"],
+                                PhoneNumber = (string)reader["PhoneNumber"],
+                                EmergencyContact = (string)reader["EmergencyContact"],
 
-                };
+                            });
+
+                    };
+                }
             }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
+            }
+            
 
             return Request.CreateResponse(HttpStatusCode.OK, patientsList);
 
@@ -58,8 +67,50 @@ namespace Hospital.WebApi.Controllers
         }
 
         // POST: api/Hospital
-        public void Post([FromBody]string value)
+        public HttpResponseMessage Post([FromBody]Patient newPatient)
         {
+            NpgsqlConnection connection = new NpgsqlConnection(connectionString);
+            using (connection)
+            {
+                try
+                {
+                    NpgsqlCommand command = new NpgsqlCommand();
+
+                    command.Connection = connection;
+                    command.CommandText = "INSERT INTO \"Hospital\".\"Patient\" VALUES (@Id, @FirstName, @LastName, @DOB, @PhoneNumber, @EmergencyContact)";
+                    connection.Open();
+
+                    bool patient = CheckEntryById(newPatient.Id);
+                    Guid newId = Guid.NewGuid();
+
+                    if (patient)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.OK, $"Patient {newPatient.FirstName} {newPatient.LastName} already in database");
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@Id", newId);
+                        command.Parameters.AddWithValue("@FirstName", newPatient.FirstName);
+                        command.Parameters.AddWithValue("@LastName", newPatient.LastName);
+                        command.Parameters.AddWithValue("@DOB", newPatient.DOB);
+                        command.Parameters.AddWithValue("@PhoneNumber", newPatient.PhoneNumber);
+                        command.Parameters.AddWithValue("@EmergencyContact", newPatient.EmergencyContact);
+
+                        command.ExecuteNonQuery();
+
+                        return Request.CreateResponse(HttpStatusCode.OK, "Patient added!!");
+                    }
+                }
+
+                catch
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest);
+                }
+            }
+                
+    
+          
+
         }
 
         // PUT: api/Hospital/5
@@ -68,8 +119,72 @@ namespace Hospital.WebApi.Controllers
         }
 
         // DELETE: api/Hospital/5
-        public void Delete(int id)
+        public HttpResponseMessage Delete(Guid? id)
         {
+            NpgsqlConnection connection = new NpgsqlConnection(connectionString);
+            using (connection)
+            {
+                try 
+                {
+                    connection.Open();
+                    bool result = CheckEntryById(id);
+
+                    if (result)
+                    {
+                        NpgsqlCommand command = new NpgsqlCommand();
+                        command.Connection = connection;
+                        command.CommandText = "DELETE FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
+                        command.Parameters.AddWithValue("@Id", id);
+
+                        command.ExecuteNonQuery();
+                        connection.Close();
+
+                        return Request.CreateResponse(HttpStatusCode.OK, "Entry deleted!");
+                    }
+                    else
+                    {
+                        return Request.CreateResponse(HttpStatusCode.NotFound, "Patient entry not found");
+                    }
+                }
+                catch
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest);
+                }
+            }
+
         }
+
+        public bool CheckEntryById(Guid? id)
+        {
+            try
+            {
+                NpgsqlConnection connection = new NpgsqlConnection(connectionString);
+
+                using (connection)
+                {
+                    connection.Open();
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+
+                    string query = "SELECT * FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @id;";
+                    command.Parameters.AddWithValue("@id", id);
+                    command.CommandText = query;
+                     
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    if (reader.Read())
+                    { return true; }
+                    else
+                    { return false; }
+
+                }
+            }
+            catch
+            {
+                return false;
+            }
+               
+        }
+
     }
 }
