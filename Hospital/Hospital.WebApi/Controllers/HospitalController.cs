@@ -1,4 +1,5 @@
 ﻿using Hospital.WebApi.Models;
+using Microsoft.Ajax.Utilities;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Web.Http;
 using System.Web.UI.WebControls.WebParts;
 
@@ -100,7 +102,6 @@ namespace Hospital.WebApi.Controllers
 
                             });
                         }
-                        connection.Close();
 
                         return Request.CreateResponse(HttpStatusCode.OK, patientList[0]);
                     }
@@ -149,7 +150,7 @@ namespace Hospital.WebApi.Controllers
 
                         command.ExecuteNonQuery();
 
-                        return Request.CreateResponse(HttpStatusCode.OK, "Patient added!!");
+                        return Request.CreateResponse(HttpStatusCode.OK, $"Patient {newPatient.FirstName} {newPatient.LastName} added!!");
                     }
                 }
 
@@ -177,111 +178,63 @@ namespace Hospital.WebApi.Controllers
                     command.Connection = connection;
 
                     bool patient = CheckEntryById(id);
-                    
-                    if(patient)
+
+                    if (patient)
                     {
                         connection.Open();
 
-                        List<Patient> updatedPatient = new List<Patient>();
-
-                        command.CommandText = "SELECT * FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
-                        command.Parameters.AddWithValue("@Id", id);
-
-                        NpgsqlDataReader reader = command.ExecuteReader();
-                        while(reader.Read())
-                        {
-                            updatedPatient.Add(
-                            new Patient()
-                            {   
-                                Id = (Guid)reader["Id"],
-                                FirstName = (string)reader["FirstName"],
-                                LastName = (string)reader["LastName"],
-                                DOB = (DateTime)reader["DOB"],
-                                PhoneNumber = (string)reader["PhoneNumber"],
-                                EmergencyContact = (string)reader["EmergencyContact"],
-
-                            });
-                        };
-                        connection.Close();
-                        connection.Open();
-                        command.CommandText = "UPDATE \"Hospital\".\"Patient\" SET \"FirstName\" = @FirstName, \"LastName\" = @LastName, " +
-                                          "\"DOB\" = @DOB, \"PhoneNumber\" = @PhoneNumber, \"EmergencyContact\" = @EmergencyContact WHERE \"Id\" = @Id";
-                                         
-
-                        command.Parameters.AddWithValue("@Id", id);
+                        StringBuilder updateQuery = new StringBuilder("UPDATE \"Hospital\".\"Patient\" SET ");
 
                         if (updatePatient.FirstName != null)
                         {
+                            updateQuery.Append("\"FirstName\" = @FirstName ");
                             command.Parameters.AddWithValue("@FirstName", updatePatient.FirstName);
-                        }
-                        else
-                        {
-                            command.Parameters.AddWithValue("@FirstName", updatedPatient[0].FirstName);
                         };
+
                         if (updatePatient.LastName != null)
                         {
+                            updateQuery.Append(", \"LastName\" = @LastName ");
                             command.Parameters.AddWithValue("@LastName", updatePatient.LastName);
-                        }
-                        else
-                        {
-                            command.Parameters.AddWithValue("@LastName", updatedPatient[0].LastName);
                         };
-                        if (updatePatient.DOB != null)
+
+                        if (updatePatient.DOB.HasValue)
                         {
+                            updateQuery.Append(", \"DOB\" = @DOB ");
                             command.Parameters.AddWithValue("@DOB", updatePatient.DOB);
-                        }
-                        else
-                        {
-                            command.Parameters.AddWithValue("DOB", updatedPatient[0].DOB);
                         };
+
                         if (updatePatient.PhoneNumber != null)
                         {
+                            updateQuery.Append(", \"PhoneNumber\" = @PhoneNumber ");
                             command.Parameters.AddWithValue("@PhoneNumber", updatePatient.PhoneNumber);
-                        }
-                        else
-                        {
-                            command.Parameters.AddWithValue("@PhoneNumber", updatedPatient[0].PhoneNumber);
                         };
+
                         if (updatePatient.EmergencyContact != null)
                         {
+                            updateQuery.Append(", \"EmergencyContact\" = @EmergencyContact ");
                             command.Parameters.AddWithValue("@EmergencyContact", updatePatient.EmergencyContact);
+                        }
+
+                        updateQuery.Append("WHERE \"Id\" = @id");
+                        command.Parameters.AddWithValue("@id", id);
+
+                        command.CommandText = updateQuery.ToString();
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            return Get(id); //Request.CreateResponse(HttpStatusCode.OK, "Entry updated!!");
                         }
                         else
                         {
-                            command.Parameters.AddWithValue("@EmergencyContact", updatedPatient[0].EmergencyContact);
-                        };
-
-
-
-                        command.ExecuteNonQuery();
-                        connection.Close();
-                        connection.Open();
-                        command.CommandText = "SELECT * FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
-                        command.Parameters.AddWithValue("@Id", id);
-
-                        NpgsqlDataReader newReader = command.ExecuteReader();
-                        while(newReader.Read())
-                        {
-                            updatedPatient.Add(
-                            new Patient()
-                            { 
-                                Id = (Guid)id,
-                                FirstName = (string)newReader["FirstName"],
-                                LastName = (string)newReader["LastName"],
-                                DOB = (DateTime)newReader["DOB"],
-                                PhoneNumber = (string)newReader["PhoneNumber"],
-                                EmergencyContact = (string)newReader["EmergencyContact"],
-
-                            });
-                        }
-                        
-
-                        return Request.CreateResponse(HttpStatusCode.OK, $"You have successfully updated the database");
+                            return Request.CreateResponse(HttpStatusCode.NotModified);
+                        } 
                     }
                     else
                     {
                         return Request.CreateResponse(HttpStatusCode.NotFound, "Patient not found!");
                     }
+                 
                 }
                 catch
                 {
@@ -298,20 +251,43 @@ namespace Hospital.WebApi.Controllers
             {
                 try 
                 {
+                    List<Patient> deletedPatientList = new List<Patient>();
+                    
                     connection.Open();
+
                     bool patient = CheckEntryById(id);
 
                     if (patient)
                     {
                         NpgsqlCommand command = new NpgsqlCommand();
                         command.Connection = connection;
+                        command.CommandText = "SELECT * FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
+                        command.Parameters.AddWithValue("@Id", id);
+                        NpgsqlDataReader reader = command.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            deletedPatientList.Add(
+                            new Patient()
+                            {
+
+                                Id = (Guid)reader["Id"],
+                                FirstName = (string)reader["FirstName"],
+                                LastName = (string)reader["LastName"],
+                                DOB = (DateTime)reader["DOB"],
+                                PhoneNumber = (string)reader["PhoneNumber"],
+                                EmergencyContact = (string)reader["EmergencyContact"],
+
+                            });
+                        };
+                        reader.Close();
+
                         command.CommandText = "DELETE FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
                         command.Parameters.AddWithValue("@Id", id);
 
                         command.ExecuteNonQuery();
                         connection.Close();
 
-                        return Request.CreateResponse(HttpStatusCode.OK, "Entry deleted!");
+                        return Request.CreateResponse(HttpStatusCode.OK, $"DELETED: {deletedPatientList[0].FirstName}, {deletedPatientList[0].LastName}, {deletedPatientList[0].DOB}");
                     }
                     else
                     {
@@ -344,10 +320,7 @@ namespace Hospital.WebApi.Controllers
                      
                     NpgsqlDataReader reader = command.ExecuteReader();
 
-                    if (reader.Read())
-                    { return true; }
-                    else
-                    { return false; }
+                    return reader.HasRows;
 
                 }
             }
