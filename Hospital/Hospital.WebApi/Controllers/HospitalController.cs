@@ -166,6 +166,7 @@ namespace Hospital.WebApi.Controllers
         }
 
         // PUT: api/Hospital/5
+        //create a list to check if new data is same as old, otherwise Response HttpStatusCode.NotFound not useless
         public HttpResponseMessage Put(Guid? id, [FromBody]Patient updatePatient)
         {
             NpgsqlConnection connection = new NpgsqlConnection(connectionString);
@@ -218,12 +219,16 @@ namespace Hospital.WebApi.Controllers
                         updateQuery.Append("WHERE \"Id\" = @id");
                         command.Parameters.AddWithValue("@id", id);
 
-                        command.CommandText = updateQuery.ToString();
+                        string query = updateQuery.ToString();
+
+                        query = query.Replace("SET ,", "SET ");
+                        command.CommandText = query;
+                       
                         int rowsAffected = command.ExecuteNonQuery();
 
                         if (rowsAffected > 0)
                         {
-                            return Get(id); //Request.CreateResponse(HttpStatusCode.OK, "Entry updated!!");
+                            return Request.CreateResponse(HttpStatusCode.OK, "Entry updated!!"); //Get(id)
                         }
                         else
                         {
