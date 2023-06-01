@@ -35,16 +35,13 @@ namespace Hospital.WebApi.Controllers
                     return Request.CreateResponse(HttpStatusCode.OK, result);
                 };
 
-            return Request.CreateResponse(HttpStatusCode.NotFound, "No entries in database!");
+                return Request.CreateResponse(HttpStatusCode.NotFound, "No entries in database!");
 
             }
             catch
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong");
-            }
-            
-
-            
+            }   
         }
 
         // implement get methods so that they send evrything except Id(RESTPatient)
@@ -52,15 +49,22 @@ namespace Hospital.WebApi.Controllers
         // GET: api/Hospital/5
         public HttpResponseMessage Get(Guid? id)
         {
-            PatientService patientService = new PatientService();
-            List<Patient> result = patientService.GetById(id);
+            try
+            {
+                PatientService patientService = new PatientService();
+                List<Patient> result = patientService.GetById(id);
 
-            if (result != null)
-            { return Request.CreateResponse(HttpStatusCode.OK, result);
-            };
+                if (result != null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, result);
+                };
 
-            return Request.CreateResponse(HttpStatusCode.NotFound, "Entry not found!!");
-
+                return Request.CreateResponse(HttpStatusCode.NotFound, "Entry not found!!");
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!");
+            }                        
         }
 
 
