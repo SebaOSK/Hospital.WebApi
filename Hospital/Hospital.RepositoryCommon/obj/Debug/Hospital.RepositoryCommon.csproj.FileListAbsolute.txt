@@ -1,0 +1,11 @@
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.RepositoryCommon\bin\Debug\Hospital.RepositoryCommon.dll
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.RepositoryCommon\bin\Debug\Hospital.RepositoryCommon.pdb
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.RepositoryCommon\bin\Debug\Hospital.Model.dll
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.RepositoryCommon\bin\Debug\Hospital.ModelCommon.dll
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.RepositoryCommon\bin\Debug\Hospital.Model.pdb
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.RepositoryCommon\bin\Debug\Hospital.ModelCommon.pdb
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.RepositoryCommon\obj\Debug\Hospital.RepositoryCommon.csproj.AssemblyReference.cache
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.RepositoryCommon\obj\Debug\Hospital.RepositoryCommon.csproj.CoreCompileInputs.cache
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.RepositoryCommon\obj\Debug\Hospital.RepositoryCommon.csproj.CopyComplete
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.RepositoryCommon\obj\Debug\Hospital.RepositoryCommon.dll
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.RepositoryCommon\obj\Debug\Hospital.RepositoryCommon.pdb
