@@ -65,9 +65,9 @@ namespace Hospital.Repository
                 try
                 {
                     connection.Open();
-                    bool patient = CheckEntryById(id);
+                    bool isPatient = CheckEntryById(id);
 
-                    if (patient)
+                    if (isPatient)
                     {
                         List<Patient> patientList = new List<Patient>();
 
@@ -120,9 +120,9 @@ namespace Hospital.Repository
                     command.CommandText = "INSERT INTO \"Hospital\".\"Patient\" VALUES (@Id, @FirstName, @LastName, @DOB, @PhoneNumber, @EmergencyContact)";
                     connection.Open();
 
-                    bool patient = CheckEntryById(newPatient.Id);
+                    bool isPatient = CheckEntryById(newPatient.Id);
 
-                    if (patient)
+                    if (isPatient)
                     {
                         return false;
                     }
@@ -162,9 +162,9 @@ namespace Hospital.Repository
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
 
-                    bool patient = CheckEntryById(id);
+                    bool isPatient = CheckEntryById(id);
 
-                    if (patient)
+                    if (isPatient)
                     {
                         connection.Open();
 
@@ -236,9 +236,9 @@ namespace Hospital.Repository
 
                     connection.Open();
 
-                    bool patient = CheckEntryById(id);
+                    bool isPatient = CheckEntryById(id);
 
-                    if (patient)
+                    if (isPatient)
                     {
                         NpgsqlCommand command = new NpgsqlCommand();
                         command.Connection = connection;
@@ -312,6 +312,8 @@ namespace Hospital.Repository
             }
 
         }
+
+        private bool
     }
 }
 
