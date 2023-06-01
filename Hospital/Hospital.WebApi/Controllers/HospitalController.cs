@@ -71,15 +71,22 @@ namespace Hospital.WebApi.Controllers
         // POST: api/Hospital
         public HttpResponseMessage Post([FromBody] Patient newPatient)
         {
-            PatientService patientService = new PatientService();
-            bool isAdded = patientService.InsertPatient(newPatient);
-
-            if (isAdded)
+            try
             {
-                return Request.CreateResponse(HttpStatusCode.OK, "Entry added!!");
-            };
+                PatientService patientService = new PatientService();
+                bool isAdded = patientService.InsertPatient(newPatient);
 
-            return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!");
+                if (isAdded)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, "Entry added!!");
+                };
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Patient already in database");
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!");
+            }
+            
         }   
 
         // PUT: api/Hospital/5
