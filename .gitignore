@@ -33,3 +33,5 @@
 
 # .vs folder
 Hospital/.vs/
+# bin folder
+Hospital/WebApi/bin/

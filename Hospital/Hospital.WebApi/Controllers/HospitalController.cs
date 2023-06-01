@@ -24,16 +24,24 @@ namespace Hospital.WebApi.Controllers
         // GET: api/Hospital
         public HttpResponseMessage Get()
         {
-            PatientService patientsService = new PatientService();
-
-            List<Patient> result = patientsService.GetAll();
-
-            if (result != null)
+            try
             {
-                return Request.CreateResponse(HttpStatusCode.OK, result);
-            };
+                PatientService patientsService = new PatientService();
 
-            return Request.CreateResponse(HttpStatusCode.NotFound, "No entries in database!");
+                List<Patient> result = patientsService.GetAll();
+
+                if (result != null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, result);
+                };
+
+                return Request.CreateResponse(HttpStatusCode.NotFound, "No entries in database!");
+
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong");
+            }
         }
 
         // implement get methods so that they send evrything except Id(RESTPatient)
@@ -41,68 +49,91 @@ namespace Hospital.WebApi.Controllers
         // GET: api/Hospital/5
         public HttpResponseMessage Get(Guid? id)
         {
-            PatientService patientService = new PatientService();
-            List<Patient> result = patientService.GetById(id);
+            try
+            {
+                PatientService patientService = new PatientService();
+                List<Patient> result = patientService.GetById(id);
 
-            if (result != null)
-            { return Request.CreateResponse(HttpStatusCode.OK, result);
-            };
+                if (result != null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, result);
+                };
 
-            return Request.CreateResponse(HttpStatusCode.NotFound, "Entry not found!!");
-
+                return Request.CreateResponse(HttpStatusCode.NotFound, "Entry not found!!");
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!");
+            }
         }
 
 
         // POST: api/Hospital
         public HttpResponseMessage Post([FromBody] Patient newPatient)
         {
-            PatientService patientService = new PatientService();
-            bool isAdded = patientService.InsertPatient(newPatient);
-
-            if (isAdded)
+            try
             {
-                return Request.CreateResponse(HttpStatusCode.OK, "Entry added!!");
-            };
+                PatientService patientService = new PatientService();
+                bool isAdded = patientService.InsertPatient(newPatient);
 
-            return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!");
-        }   
+                if (isAdded)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, "Entry added!!");
+                };
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Patient already in database");
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!");
+            }
+        }
 
         // PUT: api/Hospital/5
         //create a list to check if new data is same as old, otherwise Response HttpStatusCode.NotFound not useless
         public HttpResponseMessage Put(Guid? id, [FromBody] Patient updatePatient)
         {
-            PatientService patientService = new PatientService();
-            bool isDeleted = patientService.Update(id, updatePatient);
-
-            if (isDeleted)
+            try
             {
-                return Request.CreateResponse(HttpStatusCode.OK, "Entry updated");
-            };
+                PatientService patientService = new PatientService();
+                bool isDeleted = patientService.UpdatePatient(id, updatePatient);
 
-            return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!");
+                if (isDeleted)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, "Entry updated");
+                };
+                return Request.CreateResponse(HttpStatusCode.NotFound, "Patient not found!!");
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!");
+            }
         }
 
         // DELETE: api/Hospital/5
         public HttpResponseMessage Delete(Guid? id)
         {
-            PatientService patientService = new PatientService();
-            bool isDeleted = patientService.Delete(id);
-
-            if (isDeleted)
+            try
             {
-                return Request.CreateResponse(HttpStatusCode.OK, "Entry deleted");
-            };
+                PatientService patientService = new PatientService();
+                bool isDeleted = patientService.Delete(id);
 
-            return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!"); 
+                if (isDeleted)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, "Entry deleted");
+                };
+
+                return Request.CreateResponse(HttpStatusCode.NotFound, "Patient not found!!");
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!");
+            }
         }
-
-     
-  }
+    }
 }
-        
-            
 
-        
 
-        
-     
+
+
+
+

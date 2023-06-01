@@ -123,3 +123,7 @@ C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\bin\Hospital.
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\bin\Hospital.ModelCommon.pdb
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\bin\Hospital.Repository.pdb
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\bin\Hospital.Repository.dll.config
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\bin\Hospital.ServiceCommon.dll
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\bin\Hospital.RepositoryCommon.dll
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\bin\Hospital.ServiceCommon.pdb
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\bin\Hospital.RepositoryCommon.pdb
