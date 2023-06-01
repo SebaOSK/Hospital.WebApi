@@ -69,21 +69,18 @@ namespace Hospital.Repository
 
                     if (isPatient)
                     {
-                        List<Patient> patientList = new List<Patient>();
-
                         NpgsqlCommand command = new NpgsqlCommand();
                         command.Connection = connection;
                         command.CommandText = "SELECT * FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
                         command.Parameters.AddWithValue("@Id", id);
 
                         NpgsqlDataReader reader = command.ExecuteReader();
-
+                        List<Patient> patientList = new List<Patient>();
                         while (reader.Read())
                         {
                             patientList.Add(
                             new Patient()
                             {
-
                                 Id = (Guid)reader["Id"],
                                 FirstName = (string)reader["FirstName"],
                                 LastName = (string)reader["LastName"],
@@ -95,16 +92,16 @@ namespace Hospital.Repository
                         }
 
                         return patientList;
+
                     }
 
                     return null;
+
                 }
                 catch
                 {
                     return null;
                 }
-
-
             }
         }
         public bool InsertPatient(Guid id,Patient newPatient)
@@ -168,33 +165,38 @@ namespace Hospital.Repository
                     {
                         connection.Open();
 
+                        List<Patient> patientList = new List<Patient>();
+
+                        patientList = GetById(id);
+                        
+
                         StringBuilder updateQuery = new StringBuilder("UPDATE \"Hospital\".\"Patient\" SET ");
 
-                        if (updatePatient.FirstName != null)
+                        if (updatePatient.FirstName != null && updatePatient.FirstName != patientList[0].FirstName)
                         {
                             updateQuery.Append("\"FirstName\" = @FirstName ");
                             command.Parameters.AddWithValue("@FirstName", updatePatient.FirstName);
                         };
 
-                        if (updatePatient.LastName != null)
+                        if (updatePatient.LastName != null && updatePatient.LastName != patientList[0].LastName)
                         {
                             updateQuery.Append(", \"LastName\" = @LastName ");
                             command.Parameters.AddWithValue("@LastName", updatePatient.LastName);
                         };
 
-                        if (updatePatient.DOB.HasValue)
+                        if (updatePatient.DOB.HasValue && updatePatient.DOB != patientList[0].DOB)
                         {
                             updateQuery.Append(", \"DOB\" = @DOB ");
                             command.Parameters.AddWithValue("@DOB", updatePatient.DOB);
                         };
 
-                        if (updatePatient.PhoneNumber != null)
+                        if (updatePatient.PhoneNumber != null && updatePatient.PhoneNumber != patientList[0].PhoneNumber)
                         {
                             updateQuery.Append(", \"PhoneNumber\" = @PhoneNumber ");
                             command.Parameters.AddWithValue("@PhoneNumber", updatePatient.PhoneNumber);
                         };
 
-                        if (updatePatient.EmergencyContact != null)
+                        if (updatePatient.EmergencyContact != null && updatePatient.EmergencyContact != patientList[0].EmergencyContact)
                         {
                             updateQuery.Append(", \"EmergencyContact\" = @EmergencyContact ");
                             command.Parameters.AddWithValue("@EmergencyContact", updatePatient.EmergencyContact);
@@ -232,8 +234,6 @@ namespace Hospital.Repository
             {
                 try
                 {
-                    List<Patient> deletedPatientList = new List<Patient>();
-
                     connection.Open();
 
                     bool isPatient = CheckEntryById(id);
@@ -242,26 +242,6 @@ namespace Hospital.Repository
                     {
                         NpgsqlCommand command = new NpgsqlCommand();
                         command.Connection = connection;
-                        command.CommandText = "SELECT * FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
-                        command.Parameters.AddWithValue("@Id", id);
-                        NpgsqlDataReader reader = command.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            deletedPatientList.Add(
-                            new Patient()
-                            {
-
-                                Id = (Guid)reader["Id"],
-                                FirstName = (string)reader["FirstName"],
-                                LastName = (string)reader["LastName"],
-                                DOB = (DateTime)reader["DOB"],
-                                PhoneNumber = (string)reader["PhoneNumber"],
-                                EmergencyContact = (string)reader["EmergencyContact"],
-
-                            });
-                        };
-                        reader.Close();
-
                         command.CommandText = "DELETE FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
                         command.Parameters.AddWithValue("@Id", id);
 
@@ -312,8 +292,36 @@ namespace Hospital.Repository
             }
 
         }
+        /*
+        private List<Patient> GetPatient(Guid? id)
+        {
+            NpgsqlConnection connection = new NpgsqlConnection();
 
-        private bool
+            NpgsqlCommand command = new NpgsqlCommand();
+            command.Connection = connection;
+            command.CommandText = "SELECT * FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
+            command.Parameters.AddWithValue("@Id", id);
+
+            NpgsqlDataReader reader = command.ExecuteReader();
+            List<Patient> patientList = new List<Patient>();
+            while (reader.Read())
+            {
+                patientList.Add(
+                new Patient()
+                {
+                    Id = (Guid)reader["Id"],
+                    FirstName = (string)reader["FirstName"],
+                    LastName = (string)reader["LastName"],
+                    DOB = (DateTime)reader["DOB"],
+                    PhoneNumber = (string)reader["PhoneNumber"],
+                    EmergencyContact = (string)reader["EmergencyContact"],
+
+                });
+            }
+
+            return patientList;
+
+        } */
     }
 }
 
