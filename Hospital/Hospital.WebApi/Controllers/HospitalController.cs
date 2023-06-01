@@ -24,16 +24,27 @@ namespace Hospital.WebApi.Controllers
         // GET: api/Hospital
         public HttpResponseMessage Get()
         {
-            PatientService patientsService = new PatientService();
-
-            List<Patient> result = patientsService.GetAll();
-
-            if (result != null)
+            try
             {
-                return Request.CreateResponse(HttpStatusCode.OK, result);
-            };
+                PatientService patientsService = new PatientService();
+
+                List<Patient> result = patientsService.GetAll();
+
+                if (result != null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, result);
+                };
 
             return Request.CreateResponse(HttpStatusCode.NotFound, "No entries in database!");
+
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong");
+            }
+            
+
+            
         }
 
         // implement get methods so that they send evrything except Id(RESTPatient)

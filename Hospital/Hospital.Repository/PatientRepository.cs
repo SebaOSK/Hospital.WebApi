@@ -20,8 +20,6 @@ namespace Hospital.Repository
 
             List<Patient> patientsList = new List<Patient>();
 
-            try
-            {
                 using (connection)
                 {
                     NpgsqlCommand command = new NpgsqlCommand();
@@ -50,11 +48,6 @@ namespace Hospital.Repository
 
                     return patientsList;
                 }
-            }
-            catch
-            {
-                return null;
-            }
         }
 
         public List<Patient> GetById(Guid? id)
