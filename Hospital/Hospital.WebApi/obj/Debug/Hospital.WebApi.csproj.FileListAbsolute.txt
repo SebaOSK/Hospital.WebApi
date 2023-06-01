@@ -114,3 +114,12 @@ C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\bin\Microsoft
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\obj\Debug\Hospital.WebApi.csproj.CopyComplete
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\obj\Debug\Hospital.WebApi.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\obj\Debug\Hospital.WebApi.pdb
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\bin\Hospital.Model.dll
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\bin\Hospital.Service.dll
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\bin\Hospital.ModelCommon.dll
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\bin\Hospital.Repository.dll
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\bin\Hospital.Model.pdb
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\bin\Hospital.Service.pdb
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\bin\Hospital.ModelCommon.pdb
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\bin\Hospital.Repository.pdb
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.WebApi\bin\Hospital.Repository.dll.config

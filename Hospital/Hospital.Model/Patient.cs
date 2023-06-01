@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
+using Hospital.ModelCommon;
 
-namespace Hospital.WebApi.Models
+namespace Hospital.Model
 {
-    public class Patient
+    public class Patient : IPatient
     {
         public Guid Id { get; set; }
         public string FirstName { get; set; }
