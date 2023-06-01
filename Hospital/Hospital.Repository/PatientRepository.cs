@@ -104,13 +104,71 @@ namespace Hospital.Repository
                 }
 
 
-            };
-            /*public bool InsertPatient();
-            public bool UpdatePatient();
-            public bool DeletePatient();*/
+            }
+        }
+        /*public bool InsertPatient();
+        public bool UpdatePatient();*/
+
+        public bool DeletePatient(Guid? id)
+        {
+            NpgsqlConnection connection = new NpgsqlConnection(connectionString);
+            using (connection)
+            {
+                try
+                {
+                    List<Patient> deletedPatientList = new List<Patient>();
+
+                    connection.Open();
+
+                    bool patient = CheckEntryById(id);
+
+                    if (patient)
+                    {
+                        NpgsqlCommand command = new NpgsqlCommand();
+                        command.Connection = connection;
+                        command.CommandText = "SELECT * FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
+                        command.Parameters.AddWithValue("@Id", id);
+                        NpgsqlDataReader reader = command.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            deletedPatientList.Add(
+                            new Patient()
+                            {
+
+                                Id = (Guid)reader["Id"],
+                                FirstName = (string)reader["FirstName"],
+                                LastName = (string)reader["LastName"],
+                                DOB = (DateTime)reader["DOB"],
+                                PhoneNumber = (string)reader["PhoneNumber"],
+                                EmergencyContact = (string)reader["EmergencyContact"],
+
+                            });
+                        };
+                        reader.Close();
+
+                        command.CommandText = "DELETE FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
+                        command.Parameters.AddWithValue("@Id", id);
+
+                        command.ExecuteNonQuery();
+                        connection.Close();
+
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+    
 
         }
-        public bool CheckEntryById(Guid? id)
+
+        private bool CheckEntryById(Guid? id)
         {
             try
             {

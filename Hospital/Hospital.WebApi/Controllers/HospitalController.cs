@@ -36,6 +36,8 @@ namespace Hospital.WebApi.Controllers
             return Request.CreateResponse(HttpStatusCode.NotFound, "No entries in database!");
         }
 
+        // implement get methods so that they send evrything except Id(RESTPatient)
+
         // GET: api/Hospital/5
         public HttpResponseMessage Get(Guid? id)
         {
@@ -49,8 +51,8 @@ namespace Hospital.WebApi.Controllers
             return Request.CreateResponse(HttpStatusCode.NotFound);
 
         }
-    }
-}
+    
+
         /*/ POST: api/Hospital
         public HttpResponseMessage Post([FromBody]RESTPatient newPatient)
         {
@@ -179,68 +181,29 @@ namespace Hospital.WebApi.Controllers
                     return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooop, something went wrong");
                 }
             }
-        }
+        }*/
 
         // DELETE: api/Hospital/5
         public HttpResponseMessage Delete(Guid? id)
         {
-            NpgsqlConnection connection = new NpgsqlConnection(connectionString);
-            using (connection)
+            PatientService patientService = new PatientService();
+            bool isDeleted = patientService.Delete(id);
+
+            if (isDeleted)
             {
-                try 
-                {
-                    List<RESTPatient> deletedPatientList = new List<RESTPatient>();
-                    
-                    connection.Open();
+                return Request.CreateResponse(HttpStatusCode.OK, "Entry deleted");
+            };
 
-                    bool patient = CheckEntryById(id);
-
-                    if (patient)
-                    {
-                        NpgsqlCommand command = new NpgsqlCommand();
-                        command.Connection = connection;
-                        command.CommandText = "SELECT * FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
-                        command.Parameters.AddWithValue("@Id", id);
-                        NpgsqlDataReader reader = command.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            deletedPatientList.Add(
-                            new RESTPatient()
-                            {
-
-                                Id = (Guid)reader["Id"],
-                                FirstName = (string)reader["FirstName"],
-                                LastName = (string)reader["LastName"],
-                                DOB = (DateTime)reader["DOB"],
-                                PhoneNumber = (string)reader["PhoneNumber"],
-                                EmergencyContact = (string)reader["EmergencyContact"],
-
-                            });
-                        };
-                        reader.Close();
-
-                        command.CommandText = "DELETE FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
-                        command.Parameters.AddWithValue("@Id", id);
-
-                        command.ExecuteNonQuery();
-                        connection.Close();
-
-                        return Request.CreateResponse(HttpStatusCode.OK, $"DELETED: {deletedPatientList[0].FirstName}, {deletedPatientList[0].LastName}, {deletedPatientList[0].DOB}");
-                    }
-                    else
-                    {
-                        return Request.CreateResponse(HttpStatusCode.NotFound, "Patient entry not found");
-                    }
-                }
-                catch
-                {
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooop, something went wrong");
-                }
-            }
-
+            return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!"); 
         }
 
-        }
-
+     
+  }
 }
-        */
+        
+            
+
+        
+
+        
+     
