@@ -98,90 +98,22 @@ namespace Hospital.WebApi.Controllers
     
           
 
-        }
+        }*/
 
         // PUT: api/Hospital/5
         //create a list to check if new data is same as old, otherwise Response HttpStatusCode.NotFound not useless
-        public HttpResponseMessage Put(Guid? id, [FromBody]RESTPatient updatePatient)
+        public HttpResponseMessage Put(Guid? id, [FromBody] Patient updatePatient)
         {
-            NpgsqlConnection connection = new NpgsqlConnection(connectionString);
+            PatientService patientService = new PatientService();
+            bool isDeleted = patientService.Update(id, updatePatient);
 
-            using(connection)
+            if (isDeleted)
             {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand();
-                    command.Connection = connection;
+                return Request.CreateResponse(HttpStatusCode.OK, "Entry updated");
+            };
 
-                    bool patient = CheckEntryById(id);
-
-                    if (patient)
-                    {
-                        connection.Open();
-
-                        StringBuilder updateQuery = new StringBuilder("UPDATE \"Hospital\".\"Patient\" SET ");
-
-                        if (updatePatient.FirstName != null)
-                        {
-                            updateQuery.Append("\"FirstName\" = @FirstName ");
-                            command.Parameters.AddWithValue("@FirstName", updatePatient.FirstName);
-                        };
-
-                        if (updatePatient.LastName != null)
-                        {
-                            updateQuery.Append(", \"LastName\" = @LastName ");
-                            command.Parameters.AddWithValue("@LastName", updatePatient.LastName);
-                        };
-
-                        if (updatePatient.DOB.HasValue)
-                        {
-                            updateQuery.Append(", \"DOB\" = @DOB ");
-                            command.Parameters.AddWithValue("@DOB", updatePatient.DOB);
-                        };
-
-                        if (updatePatient.PhoneNumber != null)
-                        {
-                            updateQuery.Append(", \"PhoneNumber\" = @PhoneNumber ");
-                            command.Parameters.AddWithValue("@PhoneNumber", updatePatient.PhoneNumber);
-                        };
-
-                        if (updatePatient.EmergencyContact != null)
-                        {
-                            updateQuery.Append(", \"EmergencyContact\" = @EmergencyContact ");
-                            command.Parameters.AddWithValue("@EmergencyContact", updatePatient.EmergencyContact);
-                        }
-
-                        updateQuery.Append("WHERE \"Id\" = @id");
-                        command.Parameters.AddWithValue("@id", id);
-
-                        string query = updateQuery.ToString();
-
-                        query = query.Replace("SET ,", "SET ");
-                        command.CommandText = query;
-                       
-                        int rowsAffected = command.ExecuteNonQuery();
-
-                        if (rowsAffected > 0)
-                        {
-                            return Request.CreateResponse(HttpStatusCode.OK, "Entry updated!!"); //Get(id)
-                        }
-                        else
-                        {
-                            return Request.CreateResponse(HttpStatusCode.NotModified);
-                        } 
-                    }
-                    else
-                    {
-                        return Request.CreateResponse(HttpStatusCode.NotFound, "Patient not found!");
-                    }
-                 
-                }
-                catch
-                {
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooop, something went wrong");
-                }
-            }
-        }*/
+            return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!");
+        }
 
         // DELETE: api/Hospital/5
         public HttpResponseMessage Delete(Guid? id)

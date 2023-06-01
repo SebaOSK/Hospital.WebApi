@@ -106,8 +106,83 @@ namespace Hospital.Repository
 
             }
         }
-        /*public bool InsertPatient();
-        public bool UpdatePatient();*/
+        public bool InsertPatient(Guid? id, Patient newPatient)
+        {
+            
+        }
+        public bool UpdatePatient(Guid? id, Patient updatePatient)
+        {
+            NpgsqlConnection connection = new NpgsqlConnection(connectionString);
+
+            using (connection)
+            {
+                try
+                {
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+
+                    bool patient = CheckEntryById(id);
+
+                    if (patient)
+                    {
+                        connection.Open();
+
+                        StringBuilder updateQuery = new StringBuilder("UPDATE \"Hospital\".\"Patient\" SET ");
+
+                        if (updatePatient.FirstName != null)
+                        {
+                            updateQuery.Append("\"FirstName\" = @FirstName ");
+                            command.Parameters.AddWithValue("@FirstName", updatePatient.FirstName);
+                        };
+
+                        if (updatePatient.LastName != null)
+                        {
+                            updateQuery.Append(", \"LastName\" = @LastName ");
+                            command.Parameters.AddWithValue("@LastName", updatePatient.LastName);
+                        };
+
+                        if (updatePatient.DOB.HasValue)
+                        {
+                            updateQuery.Append(", \"DOB\" = @DOB ");
+                            command.Parameters.AddWithValue("@DOB", updatePatient.DOB);
+                        };
+
+                        if (updatePatient.PhoneNumber != null)
+                        {
+                            updateQuery.Append(", \"PhoneNumber\" = @PhoneNumber ");
+                            command.Parameters.AddWithValue("@PhoneNumber", updatePatient.PhoneNumber);
+                        };
+
+                        if (updatePatient.EmergencyContact != null)
+                        {
+                            updateQuery.Append(", \"EmergencyContact\" = @EmergencyContact ");
+                            command.Parameters.AddWithValue("@EmergencyContact", updatePatient.EmergencyContact);
+                        }
+
+                        updateQuery.Append("WHERE \"Id\" = @id");
+                        command.Parameters.AddWithValue("@id", id);
+
+                        string query = updateQuery.ToString();
+
+                        query = query.Replace("SET ,", "SET ");
+                        command.CommandText = query;
+
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            return true;
+                        };
+          
+                    };
+                    return false;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
 
         public bool DeletePatient(Guid? id)
         {

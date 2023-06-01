@@ -37,9 +37,18 @@ namespace Hospital.Service
             return null;
         }
         /*
-        bool InsertPatient(Patient newPatient);
-        bool UpdatePatient(Guid? id, Patient updatePatient);
-        */
+        bool InsertPatient(Patient newPatient);*/
+        public bool Update(Guid? id, Patient updatePatient)
+        {
+            PatientRepository patientRepository = new PatientRepository();
+            bool isUpdated = patientRepository.UpdatePatient(id, updatePatient);
+
+            if (isUpdated)
+            { return true; };
+
+            return false;
+        }
+      
         public bool Delete(Guid? id)
         {
             PatientRepository patientRepository = new PatientRepository();
