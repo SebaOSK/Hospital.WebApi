@@ -20,34 +20,34 @@ namespace Hospital.Repository
 
             List<Patient> patientsList = new List<Patient>();
 
-                using (connection)
+            using (connection)
+            {
+                NpgsqlCommand command = new NpgsqlCommand();
+                command.Connection = connection;
+                command.CommandText = "SELECT * FROM \"Hospital\".\"Patient\"";
+                connection.Open();
+
+                NpgsqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
                 {
-                    NpgsqlCommand command = new NpgsqlCommand();
-                    command.Connection = connection;
-                    command.CommandText = "SELECT * FROM \"Hospital\".\"Patient\"";
-                    connection.Open();
+                    patientsList.Add(
+                        new Patient()
+                        {
 
-                    NpgsqlDataReader reader = command.ExecuteReader();
+                            Id = (Guid)reader["Id"],
+                            FirstName = (string)reader["FirstName"],
+                            LastName = (string)reader["LastName"],
+                            DOB = (DateTime)reader["DOB"],
+                            PhoneNumber = (string)reader["PhoneNumber"],
+                            EmergencyContact = (string)reader["EmergencyContact"],
 
-                    while (reader.Read())
-                    {
-                        patientsList.Add(
-                            new Patient()
-                            {
+                        });
+                };
+                connection.Close();
 
-                                Id = (Guid)reader["Id"],
-                                FirstName = (string)reader["FirstName"],
-                                LastName = (string)reader["LastName"],
-                                DOB = (DateTime)reader["DOB"],
-                                PhoneNumber = (string)reader["PhoneNumber"],
-                                EmergencyContact = (string)reader["EmergencyContact"],
-
-                            });
-                    };
-                    connection.Close();
-
-                    return patientsList;
-                }
+                return patientsList;
+            }
         }
 
         public List<Patient> GetById(Guid? id)
@@ -55,91 +55,68 @@ namespace Hospital.Repository
             NpgsqlConnection connection = new NpgsqlConnection(connectionString);
             using (connection)
             {
-                try
-                {
-                    connection.Open();
-                    bool isPatient = CheckEntryById(id);
+                connection.Open();
+                bool isPatient = CheckEntryById(id);
 
-                    if (isPatient)
+                if (isPatient)
+                {
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    command.CommandText = "SELECT * FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    NpgsqlDataReader reader = command.ExecuteReader();
+                    List<Patient> patientList = new List<Patient>();
+                    while (reader.Read())
                     {
-                        NpgsqlCommand command = new NpgsqlCommand();
-                        command.Connection = connection;
-                        command.CommandText = "SELECT * FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
-                        command.Parameters.AddWithValue("@Id", id);
-
-                        NpgsqlDataReader reader = command.ExecuteReader();
-                        List<Patient> patientList = new List<Patient>();
-                        while (reader.Read())
+                        patientList.Add(
+                        new Patient()
                         {
-                            patientList.Add(
-                            new Patient()
-                            {
-                                Id = (Guid)reader["Id"],
-                                FirstName = (string)reader["FirstName"],
-                                LastName = (string)reader["LastName"],
-                                DOB = (DateTime)reader["DOB"],
-                                PhoneNumber = (string)reader["PhoneNumber"],
-                                EmergencyContact = (string)reader["EmergencyContact"],
+                            Id = (Guid)reader["Id"],
+                            FirstName = (string)reader["FirstName"],
+                            LastName = (string)reader["LastName"],
+                            DOB = (DateTime)reader["DOB"],
+                            PhoneNumber = (string)reader["PhoneNumber"],
+                            EmergencyContact = (string)reader["EmergencyContact"],
 
-                            });
-                        }
-
-                        return patientList;
-
+                        });
                     }
-
-                    return null;
-
+                    return patientList;
                 }
-                catch
-                {
-                    return null;
-                }
+                return null;
             }
         }
-        public bool InsertPatient(Guid id,Patient newPatient)
+        public bool InsertPatient(Guid id, Patient newPatient)
         {
             NpgsqlConnection connection = new NpgsqlConnection(connectionString);
             using (connection)
             {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand();
+                NpgsqlCommand command = new NpgsqlCommand();
 
-                    command.Connection = connection;
-                    command.CommandText = "INSERT INTO \"Hospital\".\"Patient\" VALUES (@Id, @FirstName, @LastName, @DOB, @PhoneNumber, @EmergencyContact)";
-                    connection.Open();
+                command.Connection = connection;
+                command.CommandText = "INSERT INTO \"Hospital\".\"Patient\" VALUES (@Id, @FirstName, @LastName, @DOB, @PhoneNumber, @EmergencyContact)";
+                connection.Open();
 
-                    bool isPatient = CheckEntryById(newPatient.Id);
+                bool isPatient = CheckEntryById(newPatient.Id);
 
-                    if (isPatient)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        command.Parameters.AddWithValue("@Id", id);
-                        command.Parameters.AddWithValue("@FirstName", newPatient.FirstName);
-                        command.Parameters.AddWithValue("@LastName", newPatient.LastName);
-                        command.Parameters.AddWithValue("@DOB", newPatient.DOB);
-                        command.Parameters.AddWithValue("@PhoneNumber", newPatient.PhoneNumber);
-                        command.Parameters.AddWithValue("@EmergencyContact", newPatient.EmergencyContact);
-
-                        command.ExecuteNonQuery();
-
-                        return true;
-                    }
-                }
-
-                catch
+                if (isPatient)
                 {
                     return false;
                 }
+                else
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+                    command.Parameters.AddWithValue("@FirstName", newPatient.FirstName);
+                    command.Parameters.AddWithValue("@LastName", newPatient.LastName);
+                    command.Parameters.AddWithValue("@DOB", newPatient.DOB);
+                    command.Parameters.AddWithValue("@PhoneNumber", newPatient.PhoneNumber);
+                    command.Parameters.AddWithValue("@EmergencyContact", newPatient.EmergencyContact);
+
+                    command.ExecuteNonQuery();
+
+                    return true;
+                }
             }
-
-
-
-
         }
         public bool UpdatePatient(Guid? id, Patient updatePatient)
         {
@@ -147,8 +124,6 @@ namespace Hospital.Repository
 
             using (connection)
             {
-                try
-                {
                     NpgsqlCommand command = new NpgsqlCommand();
                     command.Connection = connection;
 
@@ -161,7 +136,7 @@ namespace Hospital.Repository
                         List<Patient> patientList = new List<Patient>();
 
                         patientList = GetById(id);
-                        
+
 
                         StringBuilder updateQuery = new StringBuilder("UPDATE \"Hospital\".\"Patient\" SET ");
 
@@ -209,14 +184,9 @@ namespace Hospital.Repository
                         {
                             return true;
                         };
-          
+
                     };
                     return false;
-                }
-                catch
-                {
-                    return false;
-                }
             }
         }
 
@@ -253,7 +223,7 @@ namespace Hospital.Repository
                     return false;
                 }
             }
-    
+
 
         }
 

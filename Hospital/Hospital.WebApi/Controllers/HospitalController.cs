@@ -93,15 +93,22 @@ namespace Hospital.WebApi.Controllers
         //create a list to check if new data is same as old, otherwise Response HttpStatusCode.NotFound not useless
         public HttpResponseMessage Put(Guid? id, [FromBody] Patient updatePatient)
         {
-            PatientService patientService = new PatientService();
-            bool isDeleted = patientService.UpdatePatient(id, updatePatient);
-
-            if (isDeleted)
+            try
             {
-                return Request.CreateResponse(HttpStatusCode.OK, "Entry updated");
-            };
+                PatientService patientService = new PatientService();
+                bool isDeleted = patientService.UpdatePatient(id, updatePatient);
 
-            return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!");
+                if (isDeleted)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, "Entry updated");
+                };
+                return Request.CreateResponse(HttpStatusCode.NotFound, "Patient not found!!");
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!");
+            }
+            
         }
 
         // DELETE: api/Hospital/5
