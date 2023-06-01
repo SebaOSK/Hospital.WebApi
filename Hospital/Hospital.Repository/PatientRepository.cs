@@ -124,69 +124,69 @@ namespace Hospital.Repository
 
             using (connection)
             {
-                    NpgsqlCommand command = new NpgsqlCommand();
-                    command.Connection = connection;
+                NpgsqlCommand command = new NpgsqlCommand();
+                command.Connection = connection;
 
-                    bool isPatient = CheckEntryById(id);
+                bool isPatient = CheckEntryById(id);
 
-                    if (isPatient)
+                if (isPatient)
+                {
+                    connection.Open();
+
+                    List<Patient> patientList = new List<Patient>();
+
+                    patientList = GetById(id);
+
+
+                    StringBuilder updateQuery = new StringBuilder("UPDATE \"Hospital\".\"Patient\" SET ");
+
+                    if (updatePatient.FirstName != null && updatePatient.FirstName != patientList[0].FirstName)
                     {
-                        connection.Open();
-
-                        List<Patient> patientList = new List<Patient>();
-
-                        patientList = GetById(id);
-
-
-                        StringBuilder updateQuery = new StringBuilder("UPDATE \"Hospital\".\"Patient\" SET ");
-
-                        if (updatePatient.FirstName != null && updatePatient.FirstName != patientList[0].FirstName)
-                        {
-                            updateQuery.Append("\"FirstName\" = @FirstName ");
-                            command.Parameters.AddWithValue("@FirstName", updatePatient.FirstName);
-                        };
-
-                        if (updatePatient.LastName != null && updatePatient.LastName != patientList[0].LastName)
-                        {
-                            updateQuery.Append(", \"LastName\" = @LastName ");
-                            command.Parameters.AddWithValue("@LastName", updatePatient.LastName);
-                        };
-
-                        if (updatePatient.DOB.HasValue && updatePatient.DOB != patientList[0].DOB)
-                        {
-                            updateQuery.Append(", \"DOB\" = @DOB ");
-                            command.Parameters.AddWithValue("@DOB", updatePatient.DOB);
-                        };
-
-                        if (updatePatient.PhoneNumber != null && updatePatient.PhoneNumber != patientList[0].PhoneNumber)
-                        {
-                            updateQuery.Append(", \"PhoneNumber\" = @PhoneNumber ");
-                            command.Parameters.AddWithValue("@PhoneNumber", updatePatient.PhoneNumber);
-                        };
-
-                        if (updatePatient.EmergencyContact != null && updatePatient.EmergencyContact != patientList[0].EmergencyContact)
-                        {
-                            updateQuery.Append(", \"EmergencyContact\" = @EmergencyContact ");
-                            command.Parameters.AddWithValue("@EmergencyContact", updatePatient.EmergencyContact);
-                        }
-
-                        updateQuery.Append("WHERE \"Id\" = @id");
-                        command.Parameters.AddWithValue("@id", id);
-
-                        string query = updateQuery.ToString();
-
-                        query = query.Replace("SET ,", "SET ");
-                        command.CommandText = query;
-
-                        int rowsAffected = command.ExecuteNonQuery();
-
-                        if (rowsAffected > 0)
-                        {
-                            return true;
-                        };
-
+                        updateQuery.Append("\"FirstName\" = @FirstName ");
+                        command.Parameters.AddWithValue("@FirstName", updatePatient.FirstName);
                     };
-                    return false;
+
+                    if (updatePatient.LastName != null && updatePatient.LastName != patientList[0].LastName)
+                    {
+                        updateQuery.Append(", \"LastName\" = @LastName ");
+                        command.Parameters.AddWithValue("@LastName", updatePatient.LastName);
+                    };
+
+                    if (updatePatient.DOB.HasValue && updatePatient.DOB != patientList[0].DOB)
+                    {
+                        updateQuery.Append(", \"DOB\" = @DOB ");
+                        command.Parameters.AddWithValue("@DOB", updatePatient.DOB);
+                    };
+
+                    if (updatePatient.PhoneNumber != null && updatePatient.PhoneNumber != patientList[0].PhoneNumber)
+                    {
+                        updateQuery.Append(", \"PhoneNumber\" = @PhoneNumber ");
+                        command.Parameters.AddWithValue("@PhoneNumber", updatePatient.PhoneNumber);
+                    };
+
+                    if (updatePatient.EmergencyContact != null && updatePatient.EmergencyContact != patientList[0].EmergencyContact)
+                    {
+                        updateQuery.Append(", \"EmergencyContact\" = @EmergencyContact ");
+                        command.Parameters.AddWithValue("@EmergencyContact", updatePatient.EmergencyContact);
+                    }
+
+                    updateQuery.Append("WHERE \"Id\" = @id");
+                    command.Parameters.AddWithValue("@id", id);
+
+                    string query = updateQuery.ToString();
+
+                    query = query.Replace("SET ,", "SET ");
+                    command.CommandText = query;
+
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        return true;
+                    };
+
+                };
+                return false;
             }
         }
 
@@ -195,36 +195,27 @@ namespace Hospital.Repository
             NpgsqlConnection connection = new NpgsqlConnection(connectionString);
             using (connection)
             {
-                try
+                connection.Open();
+
+                bool isPatient = CheckEntryById(id);
+
+                if (isPatient)
                 {
-                    connection.Open();
+                    NpgsqlCommand command = new NpgsqlCommand();
+                    command.Connection = connection;
+                    command.CommandText = "DELETE FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
+                    command.Parameters.AddWithValue("@Id", id);
 
-                    bool isPatient = CheckEntryById(id);
+                    command.ExecuteNonQuery();
+                    connection.Close();
 
-                    if (isPatient)
-                    {
-                        NpgsqlCommand command = new NpgsqlCommand();
-                        command.Connection = connection;
-                        command.CommandText = "DELETE FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
-                        command.Parameters.AddWithValue("@Id", id);
-
-                        command.ExecuteNonQuery();
-                        connection.Close();
-
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return true;
                 }
-                catch
+                else
                 {
                     return false;
                 }
             }
-
-
         }
 
         private bool CheckEntryById(Guid? id)

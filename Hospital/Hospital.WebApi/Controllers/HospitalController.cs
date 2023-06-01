@@ -41,7 +41,7 @@ namespace Hospital.WebApi.Controllers
             catch
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong");
-            }   
+            }
         }
 
         // implement get methods so that they send evrything except Id(RESTPatient)
@@ -64,7 +64,7 @@ namespace Hospital.WebApi.Controllers
             catch
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!");
-            }                        
+            }
         }
 
 
@@ -86,8 +86,7 @@ namespace Hospital.WebApi.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!");
             }
-            
-        }   
+        }
 
         // PUT: api/Hospital/5
         //create a list to check if new data is same as old, otherwise Response HttpStatusCode.NotFound not useless
@@ -108,30 +107,33 @@ namespace Hospital.WebApi.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!");
             }
-            
         }
 
         // DELETE: api/Hospital/5
         public HttpResponseMessage Delete(Guid? id)
         {
-            PatientService patientService = new PatientService();
-            bool isDeleted = patientService.Delete(id);
-
-            if (isDeleted)
+            try
             {
-                return Request.CreateResponse(HttpStatusCode.OK, "Entry deleted");
-            };
+                PatientService patientService = new PatientService();
+                bool isDeleted = patientService.Delete(id);
 
-            return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!"); 
+                if (isDeleted)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, "Entry deleted");
+                };
+
+                return Request.CreateResponse(HttpStatusCode.NotFound, "Patient not found!!");
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!");
+            }
         }
-
-     
-  }
+    }
 }
-        
-            
 
-        
 
-        
-     
+
+
+
+
