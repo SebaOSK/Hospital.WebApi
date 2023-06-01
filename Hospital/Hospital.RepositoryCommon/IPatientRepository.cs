@@ -13,8 +13,8 @@ namespace Hospital.RepositoryCommon
         List<Patient> GetAll();
 
         List<Patient> GetById(Guid? id);
-        bool InsertPatient();
-        bool UpdatePatient();
-        bool DeletePatient();
+        bool InsertPatient(Guid id, Patient newPatient);
+        bool UpdatePatient(Guid? id, Patient updatePatient);
+        bool DeletePatient(Guid? id);
     }
 }

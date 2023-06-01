@@ -72,7 +72,7 @@ namespace Hospital.WebApi.Controllers
         public HttpResponseMessage Put(Guid? id, [FromBody] Patient updatePatient)
         {
             PatientService patientService = new PatientService();
-            bool isDeleted = patientService.Update(id, updatePatient);
+            bool isDeleted = patientService.UpdatePatient(id, updatePatient);
 
             if (isDeleted)
             {

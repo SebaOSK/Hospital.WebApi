@@ -9,7 +9,7 @@ using Hospital.Repository;
 
 namespace Hospital.Service
 {
-    public class PatientService //: IPatientService
+    public class PatientService : IPatientService
     {
         public List<Patient> GetAll()
         {
@@ -54,7 +54,7 @@ namespace Hospital.Service
 
             return false;
         }
-        public bool Update(Guid? id, Patient updatePatient)
+        public bool UpdatePatient(Guid? id, Patient updatePatient)
         {
             PatientRepository patientRepository = new PatientRepository();
             bool isUpdated = patientRepository.UpdatePatient(id, updatePatient);

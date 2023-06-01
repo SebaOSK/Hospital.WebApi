@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 using Npgsql;
 using Hospital.Model;
 using System.Linq.Expressions;
+using Hospital.RepositoryCommon;
 
 namespace Hospital.Repository
 {
-    public class PatientRepository //: RepositoryCommon.IPatientRepository
+    public class PatientRepository : IPatientRepository
     {
         static string connectionString = "Server=localhost;Port=5432;User Id=postgres;Password=jebeniPOSTgreSQL;Database=postgres";
         public List<Patient> GetAll()
