@@ -48,140 +48,39 @@ namespace Hospital.WebApi.Controllers
             { return Request.CreateResponse(HttpStatusCode.OK, result);
             };
 
-            return Request.CreateResponse(HttpStatusCode.NotFound);
+            return Request.CreateResponse(HttpStatusCode.NotFound, "Entry not found!!");
 
         }
-    
 
-        /*/ POST: api/Hospital
-        public HttpResponseMessage Post([FromBody]RESTPatient newPatient)
+
+        // POST: api/Hospital
+        public HttpResponseMessage Post([FromBody] Patient newPatient)
         {
-            NpgsqlConnection connection = new NpgsqlConnection(connectionString);
-            using (connection)
+            PatientService patientService = new PatientService();
+            bool isAdded = patientService.InsertPatient(newPatient);
+
+            if (isAdded)
             {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand();
+                return Request.CreateResponse(HttpStatusCode.OK, "Entry added!!");
+            };
 
-                    command.Connection = connection;
-                    command.CommandText = "INSERT INTO \"Hospital\".\"Patient\" VALUES (@Id, @FirstName, @LastName, @DOB, @PhoneNumber, @EmergencyContact)";
-                    connection.Open();
-
-                    bool patient = CheckEntryById(newPatient.Id);
-                    Guid newId = Guid.NewGuid();
-
-                    if (patient)
-                    {
-                        return Request.CreateResponse(HttpStatusCode.OK, $"Patient {newPatient.FirstName} {newPatient.LastName} already in database");
-                    }
-                    else
-                    {
-                        command.Parameters.AddWithValue("@Id", newId);
-                        command.Parameters.AddWithValue("@FirstName", newPatient.FirstName);
-                        command.Parameters.AddWithValue("@LastName", newPatient.LastName);
-                        command.Parameters.AddWithValue("@DOB", newPatient.DOB);
-                        command.Parameters.AddWithValue("@PhoneNumber", newPatient.PhoneNumber);
-                        command.Parameters.AddWithValue("@EmergencyContact", newPatient.EmergencyContact);
-
-                        command.ExecuteNonQuery();
-
-                        return Request.CreateResponse(HttpStatusCode.OK, $"Patient {newPatient.FirstName} {newPatient.LastName} added!!");
-                    }
-                }
-
-                catch
-                {
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooop, something went wrong");
-                }
-            }
-                
-    
-          
-
-        }
+            return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!");
+        }   
 
         // PUT: api/Hospital/5
         //create a list to check if new data is same as old, otherwise Response HttpStatusCode.NotFound not useless
-        public HttpResponseMessage Put(Guid? id, [FromBody]RESTPatient updatePatient)
+        public HttpResponseMessage Put(Guid? id, [FromBody] Patient updatePatient)
         {
-            NpgsqlConnection connection = new NpgsqlConnection(connectionString);
+            PatientService patientService = new PatientService();
+            bool isDeleted = patientService.Update(id, updatePatient);
 
-            using(connection)
+            if (isDeleted)
             {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand();
-                    command.Connection = connection;
+                return Request.CreateResponse(HttpStatusCode.OK, "Entry updated");
+            };
 
-                    bool patient = CheckEntryById(id);
-
-                    if (patient)
-                    {
-                        connection.Open();
-
-                        StringBuilder updateQuery = new StringBuilder("UPDATE \"Hospital\".\"Patient\" SET ");
-
-                        if (updatePatient.FirstName != null)
-                        {
-                            updateQuery.Append("\"FirstName\" = @FirstName ");
-                            command.Parameters.AddWithValue("@FirstName", updatePatient.FirstName);
-                        };
-
-                        if (updatePatient.LastName != null)
-                        {
-                            updateQuery.Append(", \"LastName\" = @LastName ");
-                            command.Parameters.AddWithValue("@LastName", updatePatient.LastName);
-                        };
-
-                        if (updatePatient.DOB.HasValue)
-                        {
-                            updateQuery.Append(", \"DOB\" = @DOB ");
-                            command.Parameters.AddWithValue("@DOB", updatePatient.DOB);
-                        };
-
-                        if (updatePatient.PhoneNumber != null)
-                        {
-                            updateQuery.Append(", \"PhoneNumber\" = @PhoneNumber ");
-                            command.Parameters.AddWithValue("@PhoneNumber", updatePatient.PhoneNumber);
-                        };
-
-                        if (updatePatient.EmergencyContact != null)
-                        {
-                            updateQuery.Append(", \"EmergencyContact\" = @EmergencyContact ");
-                            command.Parameters.AddWithValue("@EmergencyContact", updatePatient.EmergencyContact);
-                        }
-
-                        updateQuery.Append("WHERE \"Id\" = @id");
-                        command.Parameters.AddWithValue("@id", id);
-
-                        string query = updateQuery.ToString();
-
-                        query = query.Replace("SET ,", "SET ");
-                        command.CommandText = query;
-                       
-                        int rowsAffected = command.ExecuteNonQuery();
-
-                        if (rowsAffected > 0)
-                        {
-                            return Request.CreateResponse(HttpStatusCode.OK, "Entry updated!!"); //Get(id)
-                        }
-                        else
-                        {
-                            return Request.CreateResponse(HttpStatusCode.NotModified);
-                        } 
-                    }
-                    else
-                    {
-                        return Request.CreateResponse(HttpStatusCode.NotFound, "Patient not found!");
-                    }
-                 
-                }
-                catch
-                {
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooop, something went wrong");
-                }
-            }
-        }*/
+            return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!");
+        }
 
         // DELETE: api/Hospital/5
         public HttpResponseMessage Delete(Guid? id)
