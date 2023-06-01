@@ -48,57 +48,24 @@ namespace Hospital.WebApi.Controllers
             { return Request.CreateResponse(HttpStatusCode.OK, result);
             };
 
-            return Request.CreateResponse(HttpStatusCode.NotFound);
+            return Request.CreateResponse(HttpStatusCode.NotFound, "Entry not found!!");
 
         }
-    
 
-        /*/ POST: api/Hospital
-        public HttpResponseMessage Post([FromBody]RESTPatient newPatient)
+
+        // POST: api/Hospital
+        public HttpResponseMessage Post([FromBody] Patient newPatient)
         {
-            NpgsqlConnection connection = new NpgsqlConnection(connectionString);
-            using (connection)
+            PatientService patientService = new PatientService();
+            bool isAdded = patientService.InsertPatient(newPatient);
+
+            if (isAdded)
             {
-                try
-                {
-                    NpgsqlCommand command = new NpgsqlCommand();
+                return Request.CreateResponse(HttpStatusCode.OK, "Entry added!!");
+            };
 
-                    command.Connection = connection;
-                    command.CommandText = "INSERT INTO \"Hospital\".\"Patient\" VALUES (@Id, @FirstName, @LastName, @DOB, @PhoneNumber, @EmergencyContact)";
-                    connection.Open();
-
-                    bool patient = CheckEntryById(newPatient.Id);
-                    Guid newId = Guid.NewGuid();
-
-                    if (patient)
-                    {
-                        return Request.CreateResponse(HttpStatusCode.OK, $"Patient {newPatient.FirstName} {newPatient.LastName} already in database");
-                    }
-                    else
-                    {
-                        command.Parameters.AddWithValue("@Id", newId);
-                        command.Parameters.AddWithValue("@FirstName", newPatient.FirstName);
-                        command.Parameters.AddWithValue("@LastName", newPatient.LastName);
-                        command.Parameters.AddWithValue("@DOB", newPatient.DOB);
-                        command.Parameters.AddWithValue("@PhoneNumber", newPatient.PhoneNumber);
-                        command.Parameters.AddWithValue("@EmergencyContact", newPatient.EmergencyContact);
-
-                        command.ExecuteNonQuery();
-
-                        return Request.CreateResponse(HttpStatusCode.OK, $"Patient {newPatient.FirstName} {newPatient.LastName} added!!");
-                    }
-                }
-
-                catch
-                {
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooop, something went wrong");
-                }
-            }
-                
-    
-          
-
-        }*/
+            return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong!!");
+        }   
 
         // PUT: api/Hospital/5
         //create a list to check if new data is same as old, otherwise Response HttpStatusCode.NotFound not useless

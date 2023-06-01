@@ -106,9 +106,49 @@ namespace Hospital.Repository
 
             }
         }
-        public bool InsertPatient(Guid? id, Patient newPatient)
+        public bool InsertPatient(Guid id,Patient newPatient)
         {
-            
+            NpgsqlConnection connection = new NpgsqlConnection(connectionString);
+            using (connection)
+            {
+                try
+                {
+                    NpgsqlCommand command = new NpgsqlCommand();
+
+                    command.Connection = connection;
+                    command.CommandText = "INSERT INTO \"Hospital\".\"Patient\" VALUES (@Id, @FirstName, @LastName, @DOB, @PhoneNumber, @EmergencyContact)";
+                    connection.Open();
+
+                    bool patient = CheckEntryById(newPatient.Id);
+
+                    if (patient)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@Id", id);
+                        command.Parameters.AddWithValue("@FirstName", newPatient.FirstName);
+                        command.Parameters.AddWithValue("@LastName", newPatient.LastName);
+                        command.Parameters.AddWithValue("@DOB", newPatient.DOB);
+                        command.Parameters.AddWithValue("@PhoneNumber", newPatient.PhoneNumber);
+                        command.Parameters.AddWithValue("@EmergencyContact", newPatient.EmergencyContact);
+
+                        command.ExecuteNonQuery();
+
+                        return true;
+                    }
+                }
+
+                catch
+                {
+                    return false;
+                }
+            }
+
+
+
+
         }
         public bool UpdatePatient(Guid? id, Patient updatePatient)
         {
