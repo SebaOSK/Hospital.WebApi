@@ -32,19 +32,31 @@ namespace Hospital.WebApi.Controllers
 
                 if (result != null)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, result);
-                };
 
-                return Request.CreateResponse(HttpStatusCode.NotFound, "No entries in database!");
+                    List<RESTPatient> restPatient = new List<RESTPatient>();
 
-            }
+                    for (int counter = 0; counter < result.Count(); counter++)
+                    {
+                        restPatient.Add(new RESTPatient()
+                        {
+                            FirstName = result[counter].FirstName,
+                            LastName = result[counter].LastName,
+                            PhoneNumber = result[counter].PhoneNumber
+                        });
+                    };
+
+                    return Request.CreateResponse(HttpStatusCode.OK, restPatient);
+
+                }
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "No entries in database!");
+                }
             catch
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "Ooops, something went wrong");
             }
         }
 
-        // implement get methods so that they send evrything except Id(RESTPatient)
+        // implement get methods so that they send everything except Id(RESTPatient)
 
         // GET: api/Hospital/5
         public HttpResponseMessage Get(Guid? id)
