@@ -11,11 +11,11 @@ namespace Hospital.Service
 {
     public class PatientService : IPatientService
     {
-        public List<Patient> GetAll()
+        public async Task<List<Patient>> GetAllAsync()
         {
             PatientRepository patientList = new PatientRepository();
 
-            List<Patient> result = patientList.GetAll();
+            List<Patient> result = await patientList.GetAllAsync();
 
             if (patientList != null)
             {
@@ -24,11 +24,11 @@ namespace Hospital.Service
             return null;
         }
 
-        public List<Patient> GetById(Guid? id)
+        public async Task<List<Patient>> GetByIdAsync(Guid? id)
         {
             PatientRepository patientList = new PatientRepository();
 
-            List<Patient> result = patientList.GetById(id);
+            List<Patient> result = await patientList.GetByIdAsync(id);
 
             if (patientList != null)
             {
@@ -37,13 +37,13 @@ namespace Hospital.Service
             return null;
         }
        
-        public bool InsertPatient(Patient newPatient)
+        public async Task<bool> InsertPatientAsync(Patient newPatient)
         {
             PatientRepository patientList = new PatientRepository();
 
             Guid newGuid = Guid.NewGuid();
 
-            bool result = patientList.InsertPatient(newGuid, newPatient);
+            bool result = await patientList.InsertPatientAsync(newGuid, newPatient);
 
 
 
@@ -54,10 +54,10 @@ namespace Hospital.Service
 
             return false;
         }
-        public bool UpdatePatient(Guid? id, Patient updatePatient)
+        public async Task<bool> UpdatePatientAsync(Guid? id, Patient updatePatient)
         {
             PatientRepository patientRepository = new PatientRepository();
-            bool isUpdated = patientRepository.UpdatePatient(id, updatePatient);
+            bool isUpdated = await patientRepository.UpdatePatientAsync(id, updatePatient);
 
             if (isUpdated)
             { return true; };
@@ -65,10 +65,10 @@ namespace Hospital.Service
             return false;
         }
       
-        public bool Delete(Guid? id)
+        public async Task<bool> DeletePatientAsync(Guid? id)
         {
             PatientRepository patientRepository = new PatientRepository();
-            bool isDeleted = patientRepository.DeletePatient(id);
+            bool isDeleted = await patientRepository.DeletePatientAsync(id);
 
             if (isDeleted)
             { return true; };
