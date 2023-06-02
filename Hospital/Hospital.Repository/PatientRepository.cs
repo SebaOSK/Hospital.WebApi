@@ -14,7 +14,7 @@ namespace Hospital.Repository
     public class PatientRepository : IPatientRepository
     {
         static string connectionString = "Server=localhost;Port=5432;User Id=postgres;Password=jebeniPOSTgreSQL;Database=postgres";
-        public List<Patient> GetAll()
+        public async Task<List<Patient>> GetAllAsync()
         {
             NpgsqlConnection connection = new NpgsqlConnection(connectionString);
 
@@ -27,9 +27,9 @@ namespace Hospital.Repository
                 command.CommandText = "SELECT * FROM \"Hospital\".\"Patient\"";
                 connection.Open();
 
-                NpgsqlDataReader reader = command.ExecuteReader();
+                NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
                     patientsList.Add(
                         new Patient()

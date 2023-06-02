@@ -11,11 +11,11 @@ namespace Hospital.Service
 {
     public class PatientService : IPatientService
     {
-        public List<Patient> GetAll()
+        public async Task<List<Patient>> GetAllAsync()
         {
             PatientRepository patientList = new PatientRepository();
 
-            List<Patient> result = patientList.GetAll();
+            List<Patient> result = await patientList.GetAllAsync();
 
             if (patientList != null)
             {

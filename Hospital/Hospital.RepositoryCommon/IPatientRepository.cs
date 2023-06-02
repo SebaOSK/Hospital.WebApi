@@ -10,11 +10,11 @@ namespace Hospital.RepositoryCommon
     public interface IPatientRepository
     {
 
-        List<Patient> GetAll();
+        Task<List<Patient>> GetAllAsync();
 
         List<Patient> GetById(Guid? id);
-        bool InsertPatient(Guid id, Patient newPatient);
-        bool UpdatePatient(Guid? id, Patient updatePatient);
-        bool DeletePatient(Guid? id);
+        Task<bool> InsertPatient(Guid id, Patient newPatient);
+        Task<bool> UpdatePatient(Guid? id, Patient updatePatient);
+        Task<bool> DeletePatient(Guid? id);
     }
 }

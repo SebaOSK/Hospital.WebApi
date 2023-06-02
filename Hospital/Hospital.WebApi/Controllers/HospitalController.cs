@@ -12,6 +12,7 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.UI.WebControls.WebParts;
 
@@ -22,13 +23,13 @@ namespace Hospital.WebApi.Controllers
         static string connectionString = "Server=localhost;Port=5432;User Id=postgres;Password=jebeniPOSTgreSQL;Database=postgres";
 
         // GET: api/Hospital
-        public HttpResponseMessage Get()
+        public async Task<HttpResponseMessage> Get()
         {
             try
             {
                 PatientService patientsService = new PatientService();
 
-                List<Patient> result = patientsService.GetAll();
+                List<Patient> result = await patientsService.GetAllAsync();
 
                 if (result != null)
                 {

@@ -9,10 +9,10 @@ namespace Hospital.ServiceCommon
 {
     public interface IPatientService
     {
-        List<Patient> GetAll();
-        List<Patient> GetById(Guid? id);
-        bool InsertPatient(Patient newPatient);
-        bool UpdatePatient(Guid? id, Patient updatePatient);
-        bool Delete(Guid? id);
+        Task<List<Patient>> GetAllAsync();
+        Task<List<Patient>> GetById(Guid? id);
+        Task<bool> InsertPatient(Patient newPatient);
+        Task<bool> UpdatePatient(Guid? id, Patient updatePatient);
+        Task<bool> Delete(Guid? id);
     }
 }
