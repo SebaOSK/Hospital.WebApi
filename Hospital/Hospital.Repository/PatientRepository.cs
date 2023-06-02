@@ -50,13 +50,13 @@ namespace Hospital.Repository
             }
         }
 
-        public List<Patient> GetById(Guid? id)
+        public async Task<List<Patient>> GetByIdAsync(Guid? id)
         {
             NpgsqlConnection connection = new NpgsqlConnection(connectionString);
             using (connection)
             {
                 connection.Open();
-                bool isPatient = CheckEntryById(id);
+                bool isPatient = await CheckEntryByIdAsync(id);
 
                 if (isPatient)
                 {
@@ -65,7 +65,7 @@ namespace Hospital.Repository
                     command.CommandText = "SELECT * FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
                     command.Parameters.AddWithValue("@Id", id);
 
-                    NpgsqlDataReader reader = command.ExecuteReader();
+                    NpgsqlDataReader reader = await command.ExecuteReaderAsync();
                     List<Patient> patientList = new List<Patient>();
                     while (reader.Read())
                     {
@@ -86,7 +86,7 @@ namespace Hospital.Repository
                 return null;
             }
         }
-        public bool InsertPatient(Guid id, Patient newPatient)
+        public async Task<bool> InsertPatientAsync(Guid id, Patient newPatient)
         {
             NpgsqlConnection connection = new NpgsqlConnection(connectionString);
             using (connection)
@@ -97,7 +97,7 @@ namespace Hospital.Repository
                 command.CommandText = "INSERT INTO \"Hospital\".\"Patient\" VALUES (@Id, @FirstName, @LastName, @DOB, @PhoneNumber, @EmergencyContact)";
                 connection.Open();
 
-                bool isPatient = CheckEntryById(newPatient.Id);
+                bool isPatient = await CheckEntryByIdAsync(newPatient.Id);
 
                 if (isPatient)
                 {
@@ -112,13 +112,13 @@ namespace Hospital.Repository
                     command.Parameters.AddWithValue("@PhoneNumber", newPatient.PhoneNumber);
                     command.Parameters.AddWithValue("@EmergencyContact", newPatient.EmergencyContact);
 
-                    command.ExecuteNonQuery();
+                    await command.ExecuteNonQueryAsync();
 
                     return true;
                 }
             }
         }
-        public bool UpdatePatient(Guid? id, Patient updatePatient)
+        public async Task<bool> UpdatePatientAsync(Guid? id, Patient updatePatient)
         {
             NpgsqlConnection connection = new NpgsqlConnection(connectionString);
 
@@ -127,7 +127,7 @@ namespace Hospital.Repository
                 NpgsqlCommand command = new NpgsqlCommand();
                 command.Connection = connection;
 
-                bool isPatient = CheckEntryById(id);
+                bool isPatient = await CheckEntryByIdAsync(id);
 
                 if (isPatient)
                 {
@@ -135,7 +135,7 @@ namespace Hospital.Repository
 
                     List<Patient> patientList = new List<Patient>();
 
-                    patientList = GetById(id);
+                    patientList = await GetByIdAsync(id);
 
 
                     StringBuilder updateQuery = new StringBuilder("UPDATE \"Hospital\".\"Patient\" SET ");
@@ -178,7 +178,7 @@ namespace Hospital.Repository
                     query = query.Replace("SET ,", "SET ");
                     command.CommandText = query;
 
-                    int rowsAffected = command.ExecuteNonQuery();
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
 
                     if (rowsAffected > 0)
                     {
@@ -190,14 +190,14 @@ namespace Hospital.Repository
             }
         }
 
-        public bool DeletePatient(Guid? id)
+        public async Task<bool> DeletePatientAsync(Guid? id)
         {
             NpgsqlConnection connection = new NpgsqlConnection(connectionString);
             using (connection)
             {
                 connection.Open();
 
-                bool isPatient = CheckEntryById(id);
+                bool isPatient = await CheckEntryByIdAsync(id);
 
                 if (isPatient)
                 {
@@ -206,7 +206,7 @@ namespace Hospital.Repository
                     command.CommandText = "DELETE FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
                     command.Parameters.AddWithValue("@Id", id);
 
-                    command.ExecuteNonQuery();
+                    await command.ExecuteNonQueryAsync();
                     connection.Close();
 
                     return true;
@@ -218,7 +218,7 @@ namespace Hospital.Repository
             }
         }
 
-        private bool CheckEntryById(Guid? id)
+        private async Task<bool> CheckEntryByIdAsync(Guid? id)
         {
             try
             {
@@ -234,7 +234,7 @@ namespace Hospital.Repository
                     command.Parameters.AddWithValue("@id", id);
                     command.CommandText = query;
 
-                    NpgsqlDataReader reader = command.ExecuteReader();
+                    NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
                     return reader.HasRows;
 
@@ -246,36 +246,6 @@ namespace Hospital.Repository
             }
 
         }
-        /*
-        private List<Patient> GetPatient(Guid? id)
-        {
-            NpgsqlConnection connection = new NpgsqlConnection();
-
-            NpgsqlCommand command = new NpgsqlCommand();
-            command.Connection = connection;
-            command.CommandText = "SELECT * FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
-            command.Parameters.AddWithValue("@Id", id);
-
-            NpgsqlDataReader reader = command.ExecuteReader();
-            List<Patient> patientList = new List<Patient>();
-            while (reader.Read())
-            {
-                patientList.Add(
-                new Patient()
-                {
-                    Id = (Guid)reader["Id"],
-                    FirstName = (string)reader["FirstName"],
-                    LastName = (string)reader["LastName"],
-                    DOB = (DateTime)reader["DOB"],
-                    PhoneNumber = (string)reader["PhoneNumber"],
-                    EmergencyContact = (string)reader["EmergencyContact"],
-
-                });
-            }
-
-            return patientList;
-
-        } */
     }
 }
 

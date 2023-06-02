@@ -12,9 +12,9 @@ namespace Hospital.RepositoryCommon
 
         Task<List<Patient>> GetAllAsync();
 
-        List<Patient> GetById(Guid? id);
-        Task<bool> InsertPatient(Guid id, Patient newPatient);
-        Task<bool> UpdatePatient(Guid? id, Patient updatePatient);
-        Task<bool> DeletePatient(Guid? id);
+        Task<List<Patient>> GetByIdAsync(Guid? id);
+        Task<bool> InsertPatientAsync(Guid id, Patient newPatient);
+        Task<bool> UpdatePatientAsync(Guid? id, Patient updatePatient);
+        Task<bool> DeletePatientAsync(Guid? id);
     }
 }

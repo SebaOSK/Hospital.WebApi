@@ -23,7 +23,7 @@ namespace Hospital.WebApi.Controllers
         static string connectionString = "Server=localhost;Port=5432;User Id=postgres;Password=jebeniPOSTgreSQL;Database=postgres";
 
         // GET: api/Hospital
-        public async Task<HttpResponseMessage> Get()
+        public async Task<HttpResponseMessage> GetAsync()
         {
             try
             {
@@ -60,12 +60,12 @@ namespace Hospital.WebApi.Controllers
         // implement get methods so that they send everything except Id(RESTPatient)
 
         // GET: api/Hospital/5
-        public HttpResponseMessage Get(Guid? id)
+        public async Task<HttpResponseMessage> GetAsync(Guid? id)
         {
             try
             {
                 PatientService patientService = new PatientService();
-                List<Patient> result = patientService.GetById(id);
+                List<Patient> result = await patientService.GetByIdAsync(id);
 
                 if (result != null)
                 {
@@ -82,12 +82,12 @@ namespace Hospital.WebApi.Controllers
 
 
         // POST: api/Hospital
-        public HttpResponseMessage Post([FromBody] Patient newPatient)
+        public async Task<HttpResponseMessage> PostAsync([FromBody] Patient newPatient)
         {
             try
             {
                 PatientService patientService = new PatientService();
-                bool isAdded = patientService.InsertPatient(newPatient);
+                bool isAdded = await patientService.InsertPatientAsync(newPatient);
 
                 if (isAdded)
                 {
@@ -103,12 +103,12 @@ namespace Hospital.WebApi.Controllers
 
         // PUT: api/Hospital/5
         //create a list to check if new data is same as old, otherwise Response HttpStatusCode.NotFound not useless
-        public HttpResponseMessage Put(Guid? id, [FromBody] Patient updatePatient)
+        public async Task<HttpResponseMessage> PutAsync(Guid? id, [FromBody] Patient updatePatient)
         {
             try
             {
                 PatientService patientService = new PatientService();
-                bool isDeleted = patientService.UpdatePatient(id, updatePatient);
+                bool isDeleted = await patientService.UpdatePatientAsync(id, updatePatient);
 
                 if (isDeleted)
                 {
@@ -123,12 +123,12 @@ namespace Hospital.WebApi.Controllers
         }
 
         // DELETE: api/Hospital/5
-        public HttpResponseMessage Delete(Guid? id)
+        public async Task<HttpResponseMessage> DeleteAsync(Guid? id)
         {
             try
             {
                 PatientService patientService = new PatientService();
-                bool isDeleted = patientService.Delete(id);
+                bool isDeleted = await patientService.DeletePatientAsync(id);
 
                 if (isDeleted)
                 {
