@@ -97,25 +97,17 @@ namespace Hospital.Repository
                 command.CommandText = "INSERT INTO \"Hospital\".\"Patient\" VALUES (@Id, @FirstName, @LastName, @DOB, @PhoneNumber, @EmergencyContact)";
                 connection.Open();
 
-                bool isPatient = await CheckEntryByIdAsync(newPatient.Id);
+                command.Parameters.AddWithValue("@Id", id);
+                command.Parameters.AddWithValue("@FirstName", newPatient.FirstName);
+                command.Parameters.AddWithValue("@LastName", newPatient.LastName);
+                command.Parameters.AddWithValue("@DOB", newPatient.DOB);
+                command.Parameters.AddWithValue("@PhoneNumber", newPatient.PhoneNumber);
+                command.Parameters.AddWithValue("@EmergencyContact", newPatient.EmergencyContact);
 
-                if (isPatient)
-                {
-                    return false;
-                }
-                else
-                {
-                    command.Parameters.AddWithValue("@Id", id);
-                    command.Parameters.AddWithValue("@FirstName", newPatient.FirstName);
-                    command.Parameters.AddWithValue("@LastName", newPatient.LastName);
-                    command.Parameters.AddWithValue("@DOB", newPatient.DOB);
-                    command.Parameters.AddWithValue("@PhoneNumber", newPatient.PhoneNumber);
-                    command.Parameters.AddWithValue("@EmergencyContact", newPatient.EmergencyContact);
+                await command.ExecuteNonQueryAsync();
 
-                    await command.ExecuteNonQueryAsync();
+                return true;
 
-                    return true;
-                }
             }
         }
         public async Task<bool> UpdatePatientAsync(Guid? id, Patient updatePatient)
@@ -127,67 +119,64 @@ namespace Hospital.Repository
                 NpgsqlCommand command = new NpgsqlCommand();
                 command.Connection = connection;
 
-                bool isPatient = await CheckEntryByIdAsync(id);
 
-                if (isPatient)
+                connection.Open();
+
+                List<Patient> patientList = new List<Patient>();
+
+                patientList = await GetByIdAsync(id);
+
+
+                StringBuilder updateQuery = new StringBuilder("UPDATE \"Hospital\".\"Patient\" SET ");
+
+                if (updatePatient.FirstName != null && updatePatient.FirstName != patientList[0].FirstName)
                 {
-                    connection.Open();
-
-                    List<Patient> patientList = new List<Patient>();
-
-                    patientList = await GetByIdAsync(id);
-
-
-                    StringBuilder updateQuery = new StringBuilder("UPDATE \"Hospital\".\"Patient\" SET ");
-
-                    if (updatePatient.FirstName != null && updatePatient.FirstName != patientList[0].FirstName)
-                    {
-                        updateQuery.Append("\"FirstName\" = @FirstName ");
-                        command.Parameters.AddWithValue("@FirstName", updatePatient.FirstName);
-                    };
-
-                    if (updatePatient.LastName != null && updatePatient.LastName != patientList[0].LastName)
-                    {
-                        updateQuery.Append(", \"LastName\" = @LastName ");
-                        command.Parameters.AddWithValue("@LastName", updatePatient.LastName);
-                    };
-
-                    if (updatePatient.DOB.HasValue && updatePatient.DOB != patientList[0].DOB)
-                    {
-                        updateQuery.Append(", \"DOB\" = @DOB ");
-                        command.Parameters.AddWithValue("@DOB", updatePatient.DOB);
-                    };
-
-                    if (updatePatient.PhoneNumber != null && updatePatient.PhoneNumber != patientList[0].PhoneNumber)
-                    {
-                        updateQuery.Append(", \"PhoneNumber\" = @PhoneNumber ");
-                        command.Parameters.AddWithValue("@PhoneNumber", updatePatient.PhoneNumber);
-                    };
-
-                    if (updatePatient.EmergencyContact != null && updatePatient.EmergencyContact != patientList[0].EmergencyContact)
-                    {
-                        updateQuery.Append(", \"EmergencyContact\" = @EmergencyContact ");
-                        command.Parameters.AddWithValue("@EmergencyContact", updatePatient.EmergencyContact);
-                    }
-
-                    updateQuery.Append("WHERE \"Id\" = @id");
-                    command.Parameters.AddWithValue("@id", id);
-
-                    string query = updateQuery.ToString();
-
-                    query = query.Replace("SET ,", "SET ");
-                    command.CommandText = query;
-
-                    int rowsAffected = await command.ExecuteNonQueryAsync();
-
-                    if (rowsAffected > 0)
-                    {
-                        return true;
-                    };
-
+                    updateQuery.Append("\"FirstName\" = @FirstName ");
+                    command.Parameters.AddWithValue("@FirstName", updatePatient.FirstName);
                 };
-                return false;
-            }
+
+                if (updatePatient.LastName != null && updatePatient.LastName != patientList[0].LastName)
+                {
+                    updateQuery.Append(", \"LastName\" = @LastName ");
+                    command.Parameters.AddWithValue("@LastName", updatePatient.LastName);
+                };
+
+                if (updatePatient.DOB.HasValue && updatePatient.DOB != patientList[0].DOB)
+                {
+                    updateQuery.Append(", \"DOB\" = @DOB ");
+                    command.Parameters.AddWithValue("@DOB", updatePatient.DOB);
+                };
+
+                if (updatePatient.PhoneNumber != null && updatePatient.PhoneNumber != patientList[0].PhoneNumber)
+                {
+                    updateQuery.Append(", \"PhoneNumber\" = @PhoneNumber ");
+                    command.Parameters.AddWithValue("@PhoneNumber", updatePatient.PhoneNumber);
+                };
+
+                if (updatePatient.EmergencyContact != null && updatePatient.EmergencyContact != patientList[0].EmergencyContact)
+                {
+                    updateQuery.Append(", \"EmergencyContact\" = @EmergencyContact ");
+                    command.Parameters.AddWithValue("@EmergencyContact", updatePatient.EmergencyContact);
+                }
+
+                updateQuery.Append("WHERE \"Id\" = @id");
+                command.Parameters.AddWithValue("@id", id);
+
+                string query = updateQuery.ToString();
+
+                query = query.Replace("SET ,", "SET ");
+                command.CommandText = query;
+
+                int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                if (rowsAffected > 0)
+                {
+                    return true;
+                };
+
+            };
+            return false;
+
         }
 
         public async Task<bool> DeletePatientAsync(Guid? id)
@@ -218,7 +207,7 @@ namespace Hospital.Repository
             }
         }
 
-        private async Task<bool> CheckEntryByIdAsync(Guid? id)
+        public async Task<bool> CheckEntryByIdAsync(Guid? id)
         {
             try
             {

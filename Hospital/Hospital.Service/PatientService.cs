@@ -39,28 +39,36 @@ namespace Hospital.Service
        
         public async Task<bool> InsertPatientAsync(Patient newPatient)
         {
-            PatientRepository patientList = new PatientRepository();
+
+            PatientRepository patientRepository = new PatientRepository();
 
             Guid newGuid = Guid.NewGuid();
 
-            bool result = await patientList.InsertPatientAsync(newGuid, newPatient);
+            bool isPatient = await patientRepository.CheckEntryByIdAsync(newGuid);
 
-
-
-            if (result)
+            if (isPatient)
             {
-                return true;
+                return false;
             };
+
+            bool isInserted = await patientRepository.InsertPatientAsync(newGuid, newPatient);
+
+            if (isInserted)
+            { return true; };
 
             return false;
         }
         public async Task<bool> UpdatePatientAsync(Guid? id, Patient updatePatient)
         {
             PatientRepository patientRepository = new PatientRepository();
-            bool isUpdated = await patientRepository.UpdatePatientAsync(id, updatePatient);
+            bool isPatient = await patientRepository.CheckEntryByIdAsync(id);
 
-            if (isUpdated)
-            { return true; };
+            if (isPatient)
+            {
+                bool isUpdated = await patientRepository.UpdatePatientAsync(id, updatePatient);
+                if (isUpdated)
+                { return true; };
+            };
 
             return false;
         }
@@ -68,12 +76,16 @@ namespace Hospital.Service
         public async Task<bool> DeletePatientAsync(Guid? id)
         {
             PatientRepository patientRepository = new PatientRepository();
-            bool isDeleted = await patientRepository.DeletePatientAsync(id);
+            bool isPatient = await patientRepository.CheckEntryByIdAsync(id);
 
-            if (isDeleted)
-            { return true; };
-
-            return false;
+            if (isPatient)
+            {
+                bool isDeleted = await patientRepository.DeletePatientAsync(id);
+                if (isDeleted)
+                { return true; };
+            };
+            
+            return false;    
         }
     }
 }

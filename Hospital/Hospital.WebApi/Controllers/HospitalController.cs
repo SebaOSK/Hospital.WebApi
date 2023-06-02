@@ -87,9 +87,9 @@ namespace Hospital.WebApi.Controllers
             try
             {
                 PatientService patientService = new PatientService();
-                bool isAdded = await patientService.InsertPatientAsync(newPatient);
+                bool isInserted = await patientService.InsertPatientAsync(newPatient);
 
-                if (isAdded)
+                if (isInserted)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, "Entry added!!");
                 };
@@ -108,9 +108,9 @@ namespace Hospital.WebApi.Controllers
             try
             {
                 PatientService patientService = new PatientService();
-                bool isDeleted = await patientService.UpdatePatientAsync(id, updatePatient);
+                bool isUpdated = await patientService.UpdatePatientAsync(id, updatePatient);
 
-                if (isDeleted)
+                if (isUpdated)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, "Entry updated");
                 };
