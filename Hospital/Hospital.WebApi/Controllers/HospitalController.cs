@@ -67,9 +67,21 @@ namespace Hospital.WebApi.Controllers
                 PatientService patientService = new PatientService();
                 List<Patient> result = await patientService.GetByIdAsync(id);
 
+                List<RESTPatient> restPatient = new List<RESTPatient>();
+
+                for (int counter = 0; counter < result.Count(); counter++)
+                {
+                    restPatient.Add(new RESTPatient()
+                    {
+                        FirstName = result[counter].FirstName,
+                        LastName = result[counter].LastName,
+                        PhoneNumber = result[counter].PhoneNumber
+                    });
+                };
+
                 if (result != null)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, result);
+                    return Request.CreateResponse(HttpStatusCode.OK, restPatient);
                 };
 
                 return Request.CreateResponse(HttpStatusCode.NotFound, "Entry not found!!");

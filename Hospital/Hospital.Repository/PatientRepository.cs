@@ -176,7 +176,6 @@ namespace Hospital.Repository
 
             };
             return false;
-
         }
 
         public async Task<bool> DeletePatientAsync(Guid? id)
@@ -186,24 +185,15 @@ namespace Hospital.Repository
             {
                 connection.Open();
 
-                bool isPatient = await CheckEntryByIdAsync(id);
+                NpgsqlCommand command = new NpgsqlCommand();
+                command.Connection = connection;
+                command.CommandText = "DELETE FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
+                command.Parameters.AddWithValue("@Id", id);
 
-                if (isPatient)
-                {
-                    NpgsqlCommand command = new NpgsqlCommand();
-                    command.Connection = connection;
-                    command.CommandText = "DELETE FROM \"Hospital\".\"Patient\" WHERE \"Id\" = @Id";
-                    command.Parameters.AddWithValue("@Id", id);
+                await command.ExecuteNonQueryAsync();
+                connection.Close();
 
-                    await command.ExecuteNonQueryAsync();
-                    connection.Close();
-
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return true;
             }
         }
 

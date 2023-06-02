@@ -13,11 +13,11 @@ namespace Hospital.Service
     {
         public async Task<List<Patient>> GetAllAsync()
         {
-            PatientRepository patientList = new PatientRepository();
+            PatientRepository patientRepository = new PatientRepository();
 
-            List<Patient> result = await patientList.GetAllAsync();
+            List<Patient> result = await patientRepository.GetAllAsync();
 
-            if (patientList != null)
+            if (result != null)
             {
                 return result;
             };
@@ -26,11 +26,11 @@ namespace Hospital.Service
 
         public async Task<List<Patient>> GetByIdAsync(Guid? id)
         {
-            PatientRepository patientList = new PatientRepository();
+            PatientRepository patientRepository = new PatientRepository();
 
-            List<Patient> result = await patientList.GetByIdAsync(id);
+            List<Patient> result = await patientRepository.GetByIdAsync(id);
 
-            if (patientList != null)
+            if (result != null)
             {
                 return result;
             };
