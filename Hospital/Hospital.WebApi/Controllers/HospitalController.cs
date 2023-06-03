@@ -1,5 +1,6 @@
 ﻿using Hospital.Common;
 using Hospital.Model;
+using Hospital.Repository;
 using Hospital.Service;
 using Hospital.WebApi.Models;
 using Microsoft.Ajax.Utilities;
@@ -31,7 +32,7 @@ namespace Hospital.WebApi.Controllers
                 Paging paging = new Paging() { pageNumber = pageNumber, pageSize = pageSize };
                 PatientService patientsService = new PatientService();
 
-                List<Patient> result = await patientsService.GetAllAsync(paging);
+                PagedList<Patient> result = await patientsService.GetAllAsync(paging);
 
                 if (result != null)
                 {

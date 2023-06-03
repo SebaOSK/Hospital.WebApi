@@ -1,9 +1,11 @@
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.Service.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.Service.pdb
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.Common.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.Model.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.Repository.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.ServiceCommon.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.ModelCommon.dll
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.RepositoryCommon.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Npgsql.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\System.Memory.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Microsoft.Bcl.HashCode.dll
@@ -18,11 +20,13 @@ C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Sy
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\System.Numerics.Vectors.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\System.ValueTuple.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\System.Text.Encodings.Web.dll
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.Common.pdb
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.Model.pdb
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.Repository.pdb
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.Repository.dll.config
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.ServiceCommon.pdb
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.ModelCommon.pdb
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.RepositoryCommon.pdb
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Npgsql.xml
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\System.Memory.xml
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Microsoft.Bcl.HashCode.xml
@@ -42,7 +46,3 @@ C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\obj\Debug\Ho
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\obj\Debug\Hospital.Service.csproj.CopyComplete
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\obj\Debug\Hospital.Service.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\obj\Debug\Hospital.Service.pdb
-C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.RepositoryCommon.dll
-C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.RepositoryCommon.pdb
-C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.Common.dll
-C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.Common.pdb

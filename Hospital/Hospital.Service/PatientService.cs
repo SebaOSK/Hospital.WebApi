@@ -12,12 +12,12 @@ namespace Hospital.Service
 {
     public class PatientService : IPatientService
     {
-        public async Task<List<Patient>> GetAllAsync(Paging paging)
+        public async Task<PagedList<Patient>> GetAllAsync(Paging paging)
         {
 
             PatientRepository patientRepository = new PatientRepository();
 
-            List<Patient> result = await patientRepository.GetAllAsync(paging);
+            PagedList<Patient> result = await patientRepository.GetAllAsync(paging);
 
             if (result != null)
             {

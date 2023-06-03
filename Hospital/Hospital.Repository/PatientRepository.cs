@@ -9,13 +9,14 @@ using Hospital.Model;
 using System.Linq.Expressions;
 using Hospital.RepositoryCommon;
 using Hospital.Common;
+using System.ComponentModel;
 
 namespace Hospital.Repository
 {
     public class PatientRepository : IPatientRepository
     {
         static string connectionString = "Server=localhost;Port=5432;User Id=postgres;Password=jebeniPOSTgreSQL;Database=postgres";
-        public async Task<List<Patient>> GetAllAsync(Paging paging)
+        public async Task<PagedList<Patient>> GetAllAsync(Paging paging)
         {
             NpgsqlConnection connection = new NpgsqlConnection(connectionString);
 
@@ -25,11 +26,14 @@ namespace Hospital.Repository
             {
                 NpgsqlCommand command = new NpgsqlCommand();
                 command.Connection = connection;
-                command.CommandText = "SELECT COUNT(\"Id\" FROM \"Hospital\".\"Patient\")";
-                int count = await command.ExecuteNonQueryAsync();
+                connection.Open();
+
+                command.CommandText = "SELECT COUNT(\"Id\") FROM \"Hospital\".\"Patient\"";
+                object count = await command.ExecuteScalarAsync();
+                int entryCount = Convert.ToInt32(count);
                 string query = pagingQuery(paging);
                 command.CommandText = query;
-                connection.Open();
+                
 
                 NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
@@ -48,9 +52,9 @@ namespace Hospital.Repository
                          
                         }) ;
                 };
-                connection.Close();
+                
+                return PagedList<Patient>.ToPagedList(patientsList, paging.pageNumber, paging.pageSize, 10);
 
-                return patientsList;
             }
         }
 
@@ -250,6 +254,7 @@ namespace Hospital.Repository
 
         }
     }
+    
 }
 
 

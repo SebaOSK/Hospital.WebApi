@@ -1,6 +1,7 @@
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\bin\Debug\Hospital.Repository.dll.config
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\bin\Debug\Hospital.Repository.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\bin\Debug\Hospital.Repository.pdb
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\bin\Debug\Hospital.Common.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\bin\Debug\Hospital.Model.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\bin\Debug\Hospital.RepositoryCommon.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
@@ -19,6 +20,7 @@ C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\bin\Debug
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\bin\Debug\System.Threading.Tasks.Extensions.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\bin\Debug\System.ValueTuple.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\bin\Debug\Hospital.ModelCommon.dll
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\bin\Debug\Hospital.Common.pdb
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\bin\Debug\Hospital.Model.pdb
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\bin\Debug\Hospital.RepositoryCommon.pdb
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
@@ -42,5 +44,3 @@ C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\obj\Debug
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\obj\Debug\Hospital.Repository.csproj.CopyComplete
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\obj\Debug\Hospital.Repository.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\obj\Debug\Hospital.Repository.pdb
-C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\bin\Debug\Hospital.Common.dll
-C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\bin\Debug\Hospital.Common.pdb

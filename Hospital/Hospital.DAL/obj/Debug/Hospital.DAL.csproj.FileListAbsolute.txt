@@ -1,0 +1,6 @@
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.DAL\bin\Debug\Hospital.DAL.dll
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.DAL\bin\Debug\Hospital.DAL.pdb
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.DAL\obj\Debug\Hospital.DAL.csproj.AssemblyReference.cache
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.DAL\obj\Debug\Hospital.DAL.csproj.CoreCompileInputs.cache
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.DAL\obj\Debug\Hospital.DAL.dll
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.DAL\obj\Debug\Hospital.DAL.pdb
