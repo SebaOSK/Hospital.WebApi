@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Hospital.Common;
 using Hospital.Model;
 
 namespace Hospital.RepositoryCommon
@@ -10,7 +11,7 @@ namespace Hospital.RepositoryCommon
     public interface IPatientRepository
     {
 
-        Task<List<Patient>> GetAllAsync();
+        Task<PagedList<Patient>> GetAllAsync(Paging paging);
 
         Task<List<Patient>> GetByIdAsync(Guid? id);
         Task<bool> InsertPatientAsync(Guid id, Patient newPatient);

@@ -8,13 +8,15 @@ using Npgsql;
 using Hospital.Model;
 using System.Linq.Expressions;
 using Hospital.RepositoryCommon;
+using Hospital.Common;
+using System.ComponentModel;
 
 namespace Hospital.Repository
 {
     public class PatientRepository : IPatientRepository
     {
         static string connectionString = "Server=localhost;Port=5432;User Id=postgres;Password=jebeniPOSTgreSQL;Database=postgres";
-        public async Task<List<Patient>> GetAllAsync()
+        public async Task<PagedList<Patient>> GetAllAsync(Paging paging)
         {
             NpgsqlConnection connection = new NpgsqlConnection(connectionString);
 
@@ -24,9 +26,14 @@ namespace Hospital.Repository
             {
                 NpgsqlCommand command = new NpgsqlCommand();
                 command.Connection = connection;
-                command.CommandText = "SELECT * FROM \"Hospital\".\"Patient\"";
                 connection.Open();
 
+                command.CommandText = "SELECT COUNT(\"Id\") FROM \"Hospital\".\"Patient\"";
+                object count = await command.ExecuteScalarAsync();
+                int entryCount = Convert.ToInt32(count);
+                string query = pagingQuery(paging);
+                command.CommandText = query;
+               
                 NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
                 while (await reader.ReadAsync())
@@ -41,12 +48,12 @@ namespace Hospital.Repository
                             DOB = (DateTime)reader["DOB"],
                             PhoneNumber = (string)reader["PhoneNumber"],
                             EmergencyContact = (string)reader["EmergencyContact"],
-
-                        });
+                         
+                        }) ;
                 };
-                connection.Close();
+                
+                return PagedList<Patient>.ToPagedList(patientsList, paging.pageNumber, paging.pageSize, entryCount);
 
-                return patientsList;
             }
         }
 
@@ -225,7 +232,28 @@ namespace Hospital.Repository
             }
 
         }
+
+        private string pagingQuery(Paging paging)
+        {
+            StringBuilder pagingQuery = new StringBuilder("SELECT * FROM \"Hospital\".\"Patient\" ");
+           
+            if (paging.pageNumber != 1)
+            {
+                pagingQuery.Append($"OFFSET {(paging.pageNumber - 1 ) * paging.pageSize} "); // sql injection, mislim da ne smije ići sa placeholderima!!
+                
+            };
+            if (paging.pageSize != 3)
+            {
+                pagingQuery.Append($"FETCH NEXT {paging.pageSize} ROWS ONLY ");
+            }
+            else
+            { pagingQuery.Append("FETCH NEXT 3 ROWS ONLY"); };
+
+            return pagingQuery.ToString();
+
+        }
     }
+    
 }
 
 

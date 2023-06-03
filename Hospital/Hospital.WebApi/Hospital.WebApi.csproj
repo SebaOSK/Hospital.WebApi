@@ -354,9 +354,17 @@
     <Content Include="Scripts\jquery-3.4.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Hospital.Common\Hospital.Common.csproj">
+      <Project>{b6dfeb62-6410-4dda-9bdb-ca4f9a552fb2}</Project>
+      <Name>Hospital.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Hospital.Model\Hospital.Model.csproj">
       <Project>{3d060981-fa59-48dc-8be3-dd525828d4f4}</Project>
       <Name>Hospital.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hospital.Repository\Hospital.Repository.csproj">
+      <Project>{67016ff2-1cc0-41f1-b1b2-a43b7a0b4d58}</Project>
+      <Name>Hospital.Repository</Name>
     </ProjectReference>
     <ProjectReference Include="..\Hospital.Service\Hospital.Service.csproj">
       <Project>{b4a84bb2-ff29-4d03-8f6b-ed9cfa055418}</Project>

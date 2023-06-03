@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Hospital.Common
 {
-    internal class Paging
+    public class Paging
     {
+        public int pageNumber { get; set; }
+        public int pageSize { get; set; }
+        
     }
 }

@@ -6,16 +6,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Hospital.Model;
 using Hospital.Repository;
+using Hospital.Common;
 
 namespace Hospital.Service
 {
     public class PatientService : IPatientService
     {
-        public async Task<List<Patient>> GetAllAsync()
+        public async Task<PagedList<Patient>> GetAllAsync(Paging paging)
         {
+
             PatientRepository patientRepository = new PatientRepository();
 
-            List<Patient> result = await patientRepository.GetAllAsync();
+            PagedList<Patient> result = await patientRepository.GetAllAsync(paging);
 
             if (result != null)
             {
