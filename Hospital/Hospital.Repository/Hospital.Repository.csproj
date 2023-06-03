@@ -93,6 +93,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Hospital.Common\Hospital.Common.csproj">
+      <Project>{b6dfeb62-6410-4dda-9bdb-ca4f9a552fb2}</Project>
+      <Name>Hospital.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Hospital.Model\Hospital.Model.csproj">
       <Project>{3d060981-fa59-48dc-8be3-dd525828d4f4}</Project>
       <Name>Hospital.Model</Name>

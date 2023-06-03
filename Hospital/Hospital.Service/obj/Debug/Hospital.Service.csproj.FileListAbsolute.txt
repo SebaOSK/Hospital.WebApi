@@ -44,3 +44,5 @@ C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\obj\Debug\Ho
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\obj\Debug\Hospital.Service.pdb
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.RepositoryCommon.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.RepositoryCommon.pdb
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.Common.dll
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Service\bin\Debug\Hospital.Common.pdb

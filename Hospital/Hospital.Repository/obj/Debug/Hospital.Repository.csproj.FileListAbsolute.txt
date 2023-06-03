@@ -42,3 +42,5 @@ C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\obj\Debug
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\obj\Debug\Hospital.Repository.csproj.CopyComplete
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\obj\Debug\Hospital.Repository.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\obj\Debug\Hospital.Repository.pdb
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\bin\Debug\Hospital.Common.dll
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Repository\bin\Debug\Hospital.Common.pdb

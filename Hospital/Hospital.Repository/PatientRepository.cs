@@ -8,13 +8,14 @@ using Npgsql;
 using Hospital.Model;
 using System.Linq.Expressions;
 using Hospital.RepositoryCommon;
+using Hospital.Common;
 
 namespace Hospital.Repository
 {
     public class PatientRepository : IPatientRepository
     {
         static string connectionString = "Server=localhost;Port=5432;User Id=postgres;Password=jebeniPOSTgreSQL;Database=postgres";
-        public async Task<List<Patient>> GetAllAsync()
+        public async Task<List<Patient>> GetAllAsync(Paging paging)
         {
             NpgsqlConnection connection = new NpgsqlConnection(connectionString);
 
@@ -24,7 +25,10 @@ namespace Hospital.Repository
             {
                 NpgsqlCommand command = new NpgsqlCommand();
                 command.Connection = connection;
-                command.CommandText = "SELECT * FROM \"Hospital\".\"Patient\"";
+                command.CommandText = "SELECT COUNT(\"Id\" FROM \"Hospital\".\"Patient\")";
+                int count = await command.ExecuteNonQueryAsync();
+                string query = pagingQuery(paging);
+                command.CommandText = query;
                 connection.Open();
 
                 NpgsqlDataReader reader = await command.ExecuteReaderAsync();
@@ -41,8 +45,8 @@ namespace Hospital.Repository
                             DOB = (DateTime)reader["DOB"],
                             PhoneNumber = (string)reader["PhoneNumber"],
                             EmergencyContact = (string)reader["EmergencyContact"],
-
-                        });
+                         
+                        }) ;
                 };
                 connection.Close();
 
@@ -223,6 +227,26 @@ namespace Hospital.Repository
             {
                 return false;
             }
+
+        }
+
+        private string pagingQuery(Paging paging)
+        {
+            StringBuilder pagingQuery = new StringBuilder("SELECT * FROM \"Hospital\".\"Patient\" ");
+
+            if (paging.pageNumber != 1)
+            {
+                pagingQuery.Append($"OFFSET {(paging.pageNumber - 1 ) * paging.pageSize} ");
+                
+            };
+            if (paging.pageSize != 3)
+            {
+                pagingQuery.Append($"FETCH NEXT {paging.pageSize} ROWS ONLY ");
+            }
+            else
+            { pagingQuery.Append("FETCH NEXT 3 ROWS ONLY"); };
+
+            return pagingQuery.ToString();
 
         }
     }

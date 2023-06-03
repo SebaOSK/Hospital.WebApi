@@ -9,3 +9,5 @@ C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.ServiceCommon\obj\De
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.ServiceCommon\obj\Debug\Hospital.ServiceCommon.csproj.CopyComplete
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.ServiceCommon\obj\Debug\Hospital.ServiceCommon.dll
 C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.ServiceCommon\obj\Debug\Hospital.ServiceCommon.pdb
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.ServiceCommon\bin\Debug\Hospital.Common.dll
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.ServiceCommon\bin\Debug\Hospital.Common.pdb
