@@ -33,8 +33,7 @@ namespace Hospital.Repository
                 int entryCount = Convert.ToInt32(count);
                 string query = pagingQuery(paging);
                 command.CommandText = query;
-                
-
+               
                 NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
                 while (await reader.ReadAsync())
@@ -53,7 +52,7 @@ namespace Hospital.Repository
                         }) ;
                 };
                 
-                return PagedList<Patient>.ToPagedList(patientsList, paging.pageNumber, paging.pageSize, 10);
+                return PagedList<Patient>.ToPagedList(patientsList, paging.pageNumber, paging.pageSize, entryCount);
 
             }
         }
@@ -237,10 +236,10 @@ namespace Hospital.Repository
         private string pagingQuery(Paging paging)
         {
             StringBuilder pagingQuery = new StringBuilder("SELECT * FROM \"Hospital\".\"Patient\" ");
-
+           
             if (paging.pageNumber != 1)
             {
-                pagingQuery.Append($"OFFSET {(paging.pageNumber - 1 ) * paging.pageSize} ");
+                pagingQuery.Append($"OFFSET {(paging.pageNumber - 1 ) * paging.pageSize} "); // sql injection, mislim da ne smije ići sa placeholderima!!
                 
             };
             if (paging.pageSize != 3)

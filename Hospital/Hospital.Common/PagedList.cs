@@ -17,7 +17,7 @@ namespace Hospital.Common
         public bool HasPrevious => CurrentPage > 1;
         public bool HasNext => CurrentPage < TotalPages;
 
-        public PagedList(List<Patient> patientsList, int count, int pageNumber, int pageSize)
+        public PagedList(List<Patient> patientsList, int pageNumber, int pageSize, int count)
         {
             CurrentPage = pageNumber;
             PageSize = pageSize;

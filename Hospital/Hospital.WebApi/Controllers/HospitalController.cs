@@ -4,6 +4,7 @@ using Hospital.Repository;
 using Hospital.Service;
 using Hospital.WebApi.Models;
 using Microsoft.Ajax.Utilities;
+using Newtonsoft.Json;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace Hospital.WebApi.Controllers
         static string connectionString = "Server=localhost;Port=5432;User Id=postgres;Password=jebeniPOSTgreSQL;Database=postgres";
 
         // GET: api/Hospital
-        public async Task<HttpResponseMessage> GetAsync(int pageNumber=1, int pageSize=3)
+        public async Task<HttpResponseMessage> GetAsync(int pageNumber = 1, int pageSize = 3)
         {
             try
             {
@@ -47,6 +48,16 @@ namespace Hospital.WebApi.Controllers
                             LastName = result[counter].LastName,
                             PhoneNumber = result[counter].PhoneNumber
                         });
+                    }; 
+
+                    var metadata = new
+                    {
+                        result.TotalCount,
+                        result.PageSize,
+                        result.CurrentPage,
+                        result.TotalPages,
+                        result.HasNext,
+                        result.HasPrevious
                     };
 
                     return Request.CreateResponse(HttpStatusCode.OK, restPatient);
