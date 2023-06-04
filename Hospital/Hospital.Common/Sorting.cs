@@ -9,6 +9,6 @@ namespace Hospital.Common
     public class Sorting
     {
         public string OrderBy { get; set; }
-        public bool SortOrder { get; set; }
+        public string SortOrder { get; set; }
     }
 }

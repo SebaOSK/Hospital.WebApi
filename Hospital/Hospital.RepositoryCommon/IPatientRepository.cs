@@ -11,7 +11,7 @@ namespace Hospital.RepositoryCommon
     public interface IPatientRepository
     {
 
-        Task<PagedList<Patient>> GetAllAsync(Paging paging);
+        Task<PagedList<Patient>> GetAllAsync(Sorting sorting, Paging paging);
 
         Task<List<Patient>> GetByIdAsync(Guid? id);
         Task<bool> InsertPatientAsync(Guid id, Patient newPatient);

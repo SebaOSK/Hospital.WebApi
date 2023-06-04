@@ -10,13 +10,14 @@ using System.Linq.Expressions;
 using Hospital.RepositoryCommon;
 using Hospital.Common;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Hospital.Repository
 {
     public class PatientRepository : IPatientRepository
     {
         static string connectionString = "Server=localhost;Port=5432;User Id=postgres;Password=jebeniPOSTgreSQL;Database=postgres";
-        public async Task<PagedList<Patient>> GetAllAsync(Paging paging)
+        public async Task<PagedList<Patient>> GetAllAsync(Sorting sorting, Paging paging)
         {
             NpgsqlConnection connection = new NpgsqlConnection(connectionString);
 
@@ -31,7 +32,41 @@ namespace Hospital.Repository
                 command.CommandText = "SELECT COUNT(\"Id\") FROM \"Hospital\".\"Patient\"";
                 object count = await command.ExecuteScalarAsync();
                 int entryCount = Convert.ToInt32(count);
-                string query = pagingQuery(paging);
+
+                // a base query 
+                StringBuilder baseQuery = new StringBuilder("SELECT * FROM \"Hospital\".\"Patient\" ");
+
+                //adding to base query to create sorting query
+                if(sorting.OrderBy != "LastName")
+                {
+                    baseQuery.Append("ORDER BY " + "\"" + sorting.OrderBy + "\"");
+                }
+                else
+                {
+                    baseQuery.Append("ORDER BY \"LastName\" ");
+                };
+                if (sorting.SortOrder != "ASC")
+                {
+                    baseQuery.Append("DESC ");
+                }
+
+                // adding to base query to create paging query
+
+                if (paging.PageNumber != 1)
+                {
+                    baseQuery.Append($"OFFSET @offset "); // sql injection, mislim da ne smije ići sa placeholderima!!
+                    command.Parameters.AddWithValue("@offset", (paging.PageNumber - 1) * paging.PageSize);
+                };
+                if (paging.PageSize != 3)
+                {
+                    baseQuery.Append($"FETCH NEXT @next ROWS ONLY;");
+                    command.Parameters.AddWithValue("@next", paging.PageSize);
+                }
+                else
+                { baseQuery.Append("FETCH NEXT 3 ROWS ONLY;"); };
+
+                // converting baseQuery to string and executing it 
+                string query = baseQuery.ToString();
                 command.CommandText = query;
                
                 NpgsqlDataReader reader = await command.ExecuteReaderAsync();
@@ -52,7 +87,7 @@ namespace Hospital.Repository
                         }) ;
                 };
                 
-                return PagedList<Patient>.ToPagedList(patientsList, paging.pageNumber, paging.pageSize, entryCount);
+                return PagedList<Patient>.ToPagedList(patientsList, paging.PageNumber, paging.PageSize, entryCount);
 
             }
         }
@@ -232,28 +267,7 @@ namespace Hospital.Repository
             }
 
         }
-
-        private string pagingQuery(Paging paging)
-        {
-            StringBuilder pagingQuery = new StringBuilder("SELECT * FROM \"Hospital\".\"Patient\" ");
-           
-            if (paging.pageNumber != 1)
-            {
-                pagingQuery.Append($"OFFSET {(paging.pageNumber - 1 ) * paging.pageSize} "); // sql injection, mislim da ne smije ići sa placeholderima!!
-                
-            };
-            if (paging.pageSize != 3)
-            {
-                pagingQuery.Append($"FETCH NEXT {paging.pageSize} ROWS ONLY ");
-            }
-            else
-            { pagingQuery.Append("FETCH NEXT 3 ROWS ONLY"); };
-
-            return pagingQuery.ToString();
-
-        }
     }
-    
 }
 
 

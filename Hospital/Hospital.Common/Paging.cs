@@ -8,8 +8,8 @@ namespace Hospital.Common
 {
     public class Paging
     {
-        public int pageNumber { get; set; }
-        public int pageSize { get; set; }
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
         
     }
 }

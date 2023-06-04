@@ -26,14 +26,16 @@ namespace Hospital.WebApi.Controllers
         static string connectionString = "Server=localhost;Port=5432;User Id=postgres;Password=jebeniPOSTgreSQL;Database=postgres";
 
         // GET: api/Hospital
-        public async Task<HttpResponseMessage> GetAsync(int pageNumber = 1, int pageSize = 3)
+        public async Task<HttpResponseMessage> GetAsync(int pageNumber = 1, int pageSize = 3,
+                                                        string orderBy = "LastName", string sortOrder = "ASC")
         {
             try
             {
-                Paging paging = new Paging() { pageNumber = pageNumber, pageSize = pageSize };
+                Sorting sorting = new Sorting() { OrderBy = orderBy, SortOrder = sortOrder };
+                Paging paging = new Paging() { PageNumber = pageNumber, PageSize = pageSize };
                 PatientService patientsService = new PatientService();
 
-                PagedList<Patient> result = await patientsService.GetAllAsync(paging);
+                PagedList<Patient> result = await patientsService.GetAllAsync(sorting, paging);
 
                 if (result != null)
                 {
@@ -46,7 +48,9 @@ namespace Hospital.WebApi.Controllers
                         {
                             FirstName = result[counter].FirstName,
                             LastName = result[counter].LastName,
-                            PhoneNumber = result[counter].PhoneNumber
+                            DOB = result[counter].DOB,
+                            PhoneNumber = result[counter].PhoneNumber,                            
+                            EmergencyContact = result[counter].EmergencyContact 
                         });
                     }; 
 
