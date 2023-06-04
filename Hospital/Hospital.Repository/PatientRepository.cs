@@ -51,15 +51,12 @@ namespace Hospital.Repository
                 }
 
                 //adding to base query sorting options
-                if(sorting.OrderBy != "LastName")
+                if(sorting.OrderBy != null)
                 {
                     baseQuery.Append($"ORDER BY \"{sorting.OrderBy}\" ");
-                }
-                else
-                {
-                    baseQuery.Append("ORDER BY \"LastName\" ");
                 };
-                if (sorting.SortOrder != "ASC")
+      
+                if (sorting.SortOrder != null)
                 {
                     baseQuery.Append("DESC ");
                 }

@@ -27,7 +27,7 @@ namespace Hospital.WebApi.Controllers
 
         // GET: api/Hospital
         public async Task<HttpResponseMessage> GetAsync(int pageNumber = 1, int pageSize = 3,
-                                                        string orderBy = "LastName", string sortOrder = "ASC",
+                                                        string orderBy = null, string sortOrder = null,
                                                         string searchQuery = null, DateTime? dob = default)/* DateTime fromDate = default, DateTime toDate = default, 
                                                         DateTime fromTime = default, DateTime toTime = default)*/
         {
@@ -42,8 +42,13 @@ namespace Hospital.WebApi.Controllers
                     FromTime = fromTime,
                     ToTime = toTime*/
                 };
-
+                
                 Sorting sorting = new Sorting() { OrderBy = orderBy, SortOrder = sortOrder };
+                if ((orderBy != null) || (sortOrder != null)) ;
+                {
+                    sorting.OrderBy = orderBy;
+                    sorting.SortOrder = sortOrder;
+                }
 
                 Paging paging = new Paging() { PageNumber = pageNumber, PageSize = pageSize };
 
