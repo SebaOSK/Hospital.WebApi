@@ -36,36 +36,36 @@ namespace Hospital.Repository
                 // a base query 
                 StringBuilder baseQuery = new StringBuilder("SELECT * FROM \"Hospital\".\"Patient\" ");
 
-                //adding to base query filtering options
+                //adding filtering options to base query 
 
                 if (filtering.SearchQuery != null)
                 {
-                    //baseQuery.Append("WHERE ");
                     baseQuery.Append($"WHERE \"FirstName\" ILIKE @search OR \"LastName\" ILIKE @search ");
                     command.Parameters.AddWithValue("@search", "%" + filtering.SearchQuery + "%");
                 };
                 if (filtering.DOB != default)
                 {
                     baseQuery.Append($"WHERE \"DOB\" = @dob ");
+                    if(filtering.SearchQuery != null)
+                    { baseQuery.Replace("WHERE \"DOB\" ", "AND \"DOB\" "); };
                     command.Parameters.AddWithValue("@dob", filtering.DOB);
                 }
 
-                //adding to base query sorting options
-                if(sorting.OrderBy != null)
+                //adding sorting options to base query 
+                if (sorting.OrderBy != null)
                 {
                     baseQuery.Append($"ORDER BY \"{sorting.OrderBy}\" ");
+                    if (sorting.SortOrder != null)
+                    {
+                        baseQuery.Append("DESC ");
+                    };
                 };
       
-                if (sorting.SortOrder != null)
-                {
-                    baseQuery.Append("DESC ");
-                }
-
                 // adding to base query to create paging query
 
                 if (paging.PageNumber != 1)
                 {
-                    baseQuery.Append($"OFFSET @offset "); // sql injection, mislim da ne smije ići sa placeholderima!!
+                    baseQuery.Append($"OFFSET @offset ");
                     command.Parameters.AddWithValue("@offset", (paging.PageNumber - 1) * paging.PageSize);
                 };
                 if (paging.PageSize != 3)

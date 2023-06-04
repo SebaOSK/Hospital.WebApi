@@ -44,11 +44,6 @@ namespace Hospital.WebApi.Controllers
                 };
                 
                 Sorting sorting = new Sorting() { OrderBy = orderBy, SortOrder = sortOrder };
-                if ((orderBy != null) || (sortOrder != null)) ;
-                {
-                    sorting.OrderBy = orderBy;
-                    sorting.SortOrder = sortOrder;
-                }
 
                 Paging paging = new Paging() { PageNumber = pageNumber, PageSize = pageSize };
 
