@@ -17,7 +17,7 @@ namespace Hospital.Repository
     public class PatientRepository : IPatientRepository
     {
         static string connectionString = "Server=localhost;Port=5432;User Id=postgres;Password=jebeniPOSTgreSQL;Database=postgres";
-        public async Task<PagedList<Patient>> GetAllAsync(Sorting sorting, Paging paging)
+        public async Task<PagedList<Patient>> GetAllAsync(Sorting sorting, Filtering filtering, Paging paging)
         {
             NpgsqlConnection connection = new NpgsqlConnection(connectionString);
 
@@ -36,10 +36,24 @@ namespace Hospital.Repository
                 // a base query 
                 StringBuilder baseQuery = new StringBuilder("SELECT * FROM \"Hospital\".\"Patient\" ");
 
-                //adding to base query to create sorting query
+                //adding to base query filtering options
+
+                if (filtering.SearchQuery != null)
+                {
+                    //baseQuery.Append("WHERE ");
+                    baseQuery.Append($"WHERE \"FirstName\" ILIKE @search OR \"LastName\" ILIKE @search ");
+                    command.Parameters.AddWithValue("@search", "%" + filtering.SearchQuery + "%");
+                };
+                if (filtering.DOB != default)
+                {
+                    baseQuery.Append($"WHERE \"DOB\" = @dob ");
+                    command.Parameters.AddWithValue("@dob", filtering.DOB);
+                }
+
+                //adding to base query sorting options
                 if(sorting.OrderBy != "LastName")
                 {
-                    baseQuery.Append("ORDER BY " + "\"" + sorting.OrderBy + "\"");
+                    baseQuery.Append($"ORDER BY \"{sorting.OrderBy}\" ");
                 }
                 else
                 {

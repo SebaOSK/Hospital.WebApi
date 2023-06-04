@@ -10,7 +10,7 @@ namespace Hospital.ServiceCommon
 {
     public interface IPatientService
     {
-        Task<PagedList<Patient>> GetAllAsync(Sorting sorting, Paging paging);
+        Task<PagedList<Patient>> GetAllAsync(Sorting sorting, Filtering filtering, Paging paging);
         Task<List<Patient>> GetByIdAsync(Guid? id);
         Task<bool> InsertPatientAsync(Patient newPatient);
         Task<bool> UpdatePatientAsync(Guid? id, Patient updatePatient);

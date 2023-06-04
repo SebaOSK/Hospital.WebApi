@@ -27,15 +27,29 @@ namespace Hospital.WebApi.Controllers
 
         // GET: api/Hospital
         public async Task<HttpResponseMessage> GetAsync(int pageNumber = 1, int pageSize = 3,
-                                                        string orderBy = "LastName", string sortOrder = "ASC")
+                                                        string orderBy = "LastName", string sortOrder = "ASC",
+                                                        string searchQuery = null, DateTime? dob = default)/* DateTime fromDate = default, DateTime toDate = default, 
+                                                        DateTime fromTime = default, DateTime toTime = default)*/
         {
             try
             {
+                Filtering filtering = new Filtering()
+                {
+                    SearchQuery = searchQuery,
+                    DOB = dob.HasValue ? (DateTime)dob : default
+                    /*FromDate = fromDate,
+                    TodDate = toDate,
+                    FromTime = fromTime,
+                    ToTime = toTime*/
+                };
+
                 Sorting sorting = new Sorting() { OrderBy = orderBy, SortOrder = sortOrder };
+
                 Paging paging = new Paging() { PageNumber = pageNumber, PageSize = pageSize };
+
                 PatientService patientsService = new PatientService();
 
-                PagedList<Patient> result = await patientsService.GetAllAsync(sorting, paging);
+                PagedList<Patient> result = await patientsService.GetAllAsync(sorting, filtering, paging);
 
                 if (result != null)
                 {
@@ -93,7 +107,9 @@ namespace Hospital.WebApi.Controllers
                     {
                         FirstName = result[counter].FirstName,
                         LastName = result[counter].LastName,
-                        PhoneNumber = result[counter].PhoneNumber
+                        DOB = result[counter].DOB,
+                        PhoneNumber = result[counter].PhoneNumber,
+                        EmergencyContact = result[counter].EmergencyContact
                     });
                 };
 
