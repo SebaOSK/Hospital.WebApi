@@ -17,7 +17,7 @@ namespace Hospital.Repository
     public class PatientRepository : IPatientRepository
     {
         static string connectionString = "Server=localhost;Port=5432;User Id=postgres;Password=jebeniPOSTgreSQL;Database=postgres";
-        public async Task<PagedList<Patient>> GetAllAsync(Sorting sorting, Paging paging)
+        public async Task<PagedList<Patient>> GetAllAsync(Sorting sorting, Filtering filtering, Paging paging)
         {
             NpgsqlConnection connection = new NpgsqlConnection(connectionString);
 
@@ -36,25 +36,36 @@ namespace Hospital.Repository
                 // a base query 
                 StringBuilder baseQuery = new StringBuilder("SELECT * FROM \"Hospital\".\"Patient\" ");
 
-                //adding to base query to create sorting query
-                if(sorting.OrderBy != "LastName")
+                //adding filtering options to base query 
+
+                if (filtering.SearchQuery != null)
                 {
-                    baseQuery.Append("ORDER BY " + "\"" + sorting.OrderBy + "\"");
-                }
-                else
-                {
-                    baseQuery.Append("ORDER BY \"LastName\" ");
+                    baseQuery.Append($"WHERE \"FirstName\" ILIKE @search OR \"LastName\" ILIKE @search ");
+                    command.Parameters.AddWithValue("@search", "%" + filtering.SearchQuery + "%");
                 };
-                if (sorting.SortOrder != "ASC")
+                if (filtering.DOB != default)
                 {
-                    baseQuery.Append("DESC ");
+                    baseQuery.Append($"WHERE \"DOB\" = @dob ");
+                    if(filtering.SearchQuery != null)
+                    { baseQuery.Replace("WHERE \"DOB\" ", "AND \"DOB\" "); };
+                    command.Parameters.AddWithValue("@dob", filtering.DOB);
                 }
 
+                //adding sorting options to base query 
+                if (sorting.OrderBy != null)
+                {
+                    baseQuery.Append($"ORDER BY \"{sorting.OrderBy}\" ");
+                    if (sorting.SortOrder != null)
+                    {
+                        baseQuery.Append("DESC ");
+                    };
+                };
+      
                 // adding to base query to create paging query
 
                 if (paging.PageNumber != 1)
                 {
-                    baseQuery.Append($"OFFSET @offset "); // sql injection, mislim da ne smije ići sa placeholderima!!
+                    baseQuery.Append($"OFFSET @offset ");
                     command.Parameters.AddWithValue("@offset", (paging.PageNumber - 1) * paging.PageSize);
                 };
                 if (paging.PageSize != 3)

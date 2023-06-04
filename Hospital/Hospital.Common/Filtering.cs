@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace Hospital.Common
 {
-    internal class Filtering
+    public class Filtering
     {
+        public string SearchQuery { get; set; }
+        public DateTime DOB { get; set; }
+        /*public DateTime FromDate { get; set; }
+        public DateTime TodDate { get; set; }
+        public DateTime FromTime { get; set; }
+        public DateTime ToTime { get; set; }*/
     }
 }
