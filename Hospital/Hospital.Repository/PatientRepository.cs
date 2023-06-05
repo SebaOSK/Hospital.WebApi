@@ -46,57 +46,67 @@ namespace Hospital.Repository
                 //filter by date of birth
                 if (filtering.DOB != default)
                 {
-                    if(filtering.SearchQuery != null)
-                    { baseQuery.Append("OR \"DOB\"  = @dob "); };                    
-                    baseQuery.Append($"WHERE \"DOB\" = @dob ");
-                    command.Parameters.AddWithValue("@dob", filtering.DOB);
+                    if (filtering.SearchQuery != null)
+                    {
+                        baseQuery.Append("AND \"DOB\"  = @dob ");
+                        command.Parameters.AddWithValue("@dob", filtering.DOB);
+                    }
+                    else
+                    {
+                        baseQuery.Append($"WHERE \"DOB\" = @dob ");
+                        command.Parameters.AddWithValue("@dob", filtering.DOB);
+                    };
+                    
                 };
                 // filter by from - to date of birth
                 if (filtering.FromDate != default && filtering.ToDate != default)
                 {
                     if (filtering.DOB != default || filtering.SearchQuery != null)
-                    { baseQuery.Append("AND \"DOB\" BETWEEN @fromDate AND @toDate ");
-                      command.Parameters.AddWithValue("@fromDate", filtering.FromDate);
-                      command.Parameters.AddWithValue("@toDate", filtering.ToDate);
+                    {
+                        baseQuery.Append("AND \"DOB\" BETWEEN @fromDate AND @toDate ");
+                        command.Parameters.AddWithValue("@fromDate", filtering.FromDate);
+                        command.Parameters.AddWithValue("@toDate", filtering.ToDate);
                     }
-                    else 
+                    else
                     {
                         baseQuery.Append("WHERE \"DOB\" BETWEEN @fromDate AND @toDate ");
                         command.Parameters.AddWithValue("@fromDate", filtering.FromDate);
                         command.Parameters.AddWithValue("@toDate", filtering.ToDate);
                     };
-                    
+
                 }
-                else 
+                else
                 {
                     if (filtering.FromDate != default)
                     {
                         if (filtering.DOB != default || filtering.SearchQuery != null)
-                        { baseQuery.Append("AND \"DOB\" > @fromDate ");
-                          command.Parameters.AddWithValue("@fromDate", filtering.FromDate);
+                        {
+                            baseQuery.Append("AND \"DOB\" > @fromDate ");
+                            command.Parameters.AddWithValue("@fromDate", filtering.FromDate);
                         }
                         else
                         {
                             baseQuery.Append("WHERE \"DOB\" > @fromDate ");
                             command.Parameters.AddWithValue("@fromDate", filtering.FromDate);
                         };
-                        
+
                     };
                     if (filtering.ToDate != default)
                     {
                         if (filtering.DOB != default || filtering.SearchQuery != null)
-                        { baseQuery.Append("AND \"DOB\" < @toDate ");
-                          command.Parameters.AddWithValue("@toDate", filtering.ToDate);
+                        {
+                            baseQuery.Append("AND \"DOB\" < @toDate ");
+                            command.Parameters.AddWithValue("@toDate", filtering.ToDate);
                         }
                         else
                         {
                             baseQuery.Append("WHERE \"DOB\" < @toDate ");
                             command.Parameters.AddWithValue("@toDate", filtering.ToDate);
                         };
-                        
+
                     };
                 };
-                
+
 
                 //adding sorting options to base query 
                 if (sorting.OrderBy != null)
@@ -107,7 +117,7 @@ namespace Hospital.Repository
                         baseQuery.Append("DESC ");
                     };
                 };
-      
+
                 // adding to base query to create paging query
 
                 if (paging.PageNumber != 1)
@@ -126,7 +136,7 @@ namespace Hospital.Repository
                 // converting baseQuery to string and executing it 
                 string query = baseQuery.ToString();
                 command.CommandText = query;
-               
+
                 NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
                 while (await reader.ReadAsync())
@@ -141,10 +151,10 @@ namespace Hospital.Repository
                             DOB = (DateTime)reader["DOB"],
                             PhoneNumber = (string)reader["PhoneNumber"],
                             EmergencyContact = (string)reader["EmergencyContact"],
-                         
-                        }) ;
+
+                        });
                 };
-                
+
                 return PagedList<Patient>.ToPagedList(patientsList, paging.PageNumber, paging.PageSize, entryCount);
 
             }
