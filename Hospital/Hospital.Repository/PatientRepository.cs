@@ -40,16 +40,61 @@ namespace Hospital.Repository
 
                 if (filtering.SearchQuery != null)
                 {
-                    baseQuery.Append($"WHERE \"FirstName\" ILIKE @search OR \"LastName\" ILIKE @search ");
+                    baseQuery.Append($"WHERE (\"FirstName\" ILIKE @search OR \"LastName\" ILIKE @search) ");
                     command.Parameters.AddWithValue("@search", "%" + filtering.SearchQuery + "%");
                 };
                 if (filtering.DOB != default)
                 {
-                    baseQuery.Append($"WHERE \"DOB\" = @dob ");
                     if(filtering.SearchQuery != null)
-                    { baseQuery.Replace("WHERE \"DOB\" ", "AND \"DOB\" "); };
+                    { baseQuery.Append("OR \"DOB\"  = @dob "); };                    
+                    baseQuery.Append($"WHERE \"DOB\" = @dob ");
                     command.Parameters.AddWithValue("@dob", filtering.DOB);
+                };
+                if (filtering.FromDate != default && filtering.ToDate != default)
+                {
+                    if (filtering.DOB != default || filtering.SearchQuery != null)
+                    { baseQuery.Append("AND \"DOB\" BETWEEN @fromDate AND @toDate ");
+                      command.Parameters.AddWithValue("@fromDate", filtering.FromDate);
+                      command.Parameters.AddWithValue("@toDate", filtering.ToDate);
+                    }
+                    else 
+                    {
+                        baseQuery.Append("WHERE \"DOB\" BETWEEN @fromDate AND @toDate ");
+                        command.Parameters.AddWithValue("@fromDate", filtering.FromDate);
+                        command.Parameters.AddWithValue("@toDate", filtering.ToDate);
+                    };
+                    
                 }
+                else 
+                {
+                    if (filtering.FromDate != default)
+                    {
+                        if (filtering.DOB != default || filtering.SearchQuery != null)
+                        { baseQuery.Append("AND \"DOB\" > @fromDate ");
+                          command.Parameters.AddWithValue("@fromDate", filtering.FromDate);
+                        }
+                        else
+                        {
+                            baseQuery.Append("WHERE \"DOB\" > @fromDate ");
+                            command.Parameters.AddWithValue("@fromDate", filtering.FromDate);
+                        };
+                        
+                    };
+                    if (filtering.ToDate != default)
+                    {
+                        if (filtering.DOB != default || filtering.SearchQuery != null)
+                        { baseQuery.Append("AND \"DOB\" < @toDate ");
+                          command.Parameters.AddWithValue("@toDate", filtering.ToDate);
+                        }
+                        else
+                        {
+                            baseQuery.Append("WHERE \"DOB\" < @toDate ");
+                            command.Parameters.AddWithValue("@toDate", filtering.ToDate);
+                        };
+                        
+                    };
+                };
+                
 
                 //adding sorting options to base query 
                 if (sorting.OrderBy != null)

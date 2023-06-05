@@ -28,18 +28,19 @@ namespace Hospital.WebApi.Controllers
         // GET: api/Hospital
         public async Task<HttpResponseMessage> GetAsync(int pageNumber = 1, int pageSize = 3,
                                                         string orderBy = null, string sortOrder = null,
-                                                        string searchQuery = null, DateTime? dob = default)/* DateTime fromDate = default, DateTime toDate = default, 
-                                                        DateTime fromTime = default, DateTime toTime = default)*/
+                                                        string searchQuery = null, DateTime? dob = default,
+                                                        DateTime? fromDate = default, DateTime? toDate = default)
+                                                        /*DateTime fromTime = default, DateTime toTime = default)*/
         {
             try
             {
                 Filtering filtering = new Filtering()
                 {
                     SearchQuery = searchQuery,
-                    DOB = dob.HasValue ? (DateTime)dob : default
-                    /*FromDate = fromDate,
-                    TodDate = toDate,
-                    FromTime = fromTime,
+                    DOB = dob.HasValue ? (DateTime)dob : default,
+                    FromDate = fromDate.HasValue ? (DateTime)fromDate : default,
+                    ToDate = toDate.HasValue ? (DateTime)toDate : default
+                    /*FromTime = fromTime,
                     ToTime = toTime*/
                 };
                 
