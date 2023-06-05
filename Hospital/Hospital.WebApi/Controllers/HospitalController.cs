@@ -28,8 +28,8 @@ namespace Hospital.WebApi.Controllers
         // GET: api/Hospital
         public async Task<HttpResponseMessage> GetAsync(int pageNumber = 1, int pageSize = 3,
                                                         string orderBy = null, string sortOrder = null,
-                                                        string searchQuery = null, DateTime? dob = default,
-                                                        DateTime? fromDate = default, DateTime? toDate = default)
+                                                        string searchQuery = null, DateTime? dob = null,
+                                                        DateTime? fromDate = null, DateTime? toDate = null)
                                                         /*DateTime fromTime = default, DateTime toTime = default)*/
         {
             try
@@ -67,19 +67,23 @@ namespace Hospital.WebApi.Controllers
                             PhoneNumber = result[counter].PhoneNumber,                            
                             EmergencyContact = result[counter].EmergencyContact 
                         });
-                    }; 
-
-                    var metadata = new
-                    {
-                        result.TotalCount,
-                        result.PageSize,
-                        result.CurrentPage,
-                        result.TotalPages,
-                        result.HasNext,
-                        result.HasPrevious
                     };
 
-                    return Request.CreateResponse(HttpStatusCode.OK, restPatient);
+                    List<RESTPagedList> data = new List<RESTPagedList>
+                    {
+                        new RESTPagedList()
+                        {
+                            CurrentPage = result.CurrentPage,
+                            PageSize = result.PageSize,
+                            TotalPages = result.TotalPages,
+                            TotalCount = result.TotalCount,
+                            HasPrevious = result.HasPrevious,
+                            HasNext = result.HasNext,
+                            Data = restPatient
+                        }
+                    };
+
+                    return Request.CreateResponse(HttpStatusCode.OK, data);
 
                 }
                     return Request.CreateResponse(HttpStatusCode.NotFound, "No entries in database!");

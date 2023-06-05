@@ -11,6 +11,7 @@ using Hospital.RepositoryCommon;
 using Hospital.Common;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Metrics;
 
 namespace Hospital.Repository
 {
@@ -29,84 +30,48 @@ namespace Hospital.Repository
                 command.Connection = connection;
                 connection.Open();
 
-                command.CommandText = "SELECT COUNT(\"Id\") FROM \"Hospital\".\"Patient\"";
-                object count = await command.ExecuteScalarAsync();
-                int entryCount = Convert.ToInt32(count);
-
                 // a base query 
-                StringBuilder baseQuery = new StringBuilder("SELECT * FROM \"Hospital\".\"Patient\" ");
-
+                StringBuilder baseQuery = new StringBuilder("SELECT * FROM \"Hospital\".\"Patient\" WHERE 1 = 1 ");
                 //adding filtering options to base query 
                 // filter by search query
                 if (filtering.SearchQuery != null)
                 {
-                    baseQuery.Append($"WHERE (\"FirstName\" ILIKE @search OR \"LastName\" ILIKE @search) ");
+                    baseQuery.Append($"AND (\"FirstName\" ILIKE @search OR \"LastName\" ILIKE @search) ");
                     command.Parameters.AddWithValue("@search", "%" + filtering.SearchQuery + "%");
                 };
                 //filter by date of birth
                 if (filtering.DOB != default)
                 {
-                    if (filtering.SearchQuery != null)
-                    {
                         baseQuery.Append("AND \"DOB\"  = @dob ");
-                        command.Parameters.AddWithValue("@dob", filtering.DOB);
-                    }
-                    else
-                    {
-                        baseQuery.Append($"WHERE \"DOB\" = @dob ");
-                        command.Parameters.AddWithValue("@dob", filtering.DOB);
-                    };
-                    
+                        command.Parameters.AddWithValue("@dob", filtering.DOB);                                        
                 };
                 // filter by from - to date of birth
                 if (filtering.FromDate != default && filtering.ToDate != default)
                 {
-                    if (filtering.DOB != default || filtering.SearchQuery != null)
-                    {
                         baseQuery.Append("AND \"DOB\" BETWEEN @fromDate AND @toDate ");
                         command.Parameters.AddWithValue("@fromDate", filtering.FromDate);
-                        command.Parameters.AddWithValue("@toDate", filtering.ToDate);
-                    }
-                    else
-                    {
-                        baseQuery.Append("WHERE \"DOB\" BETWEEN @fromDate AND @toDate ");
-                        command.Parameters.AddWithValue("@fromDate", filtering.FromDate);
-                        command.Parameters.AddWithValue("@toDate", filtering.ToDate);
-                    };
-
+                        command.Parameters.AddWithValue("@toDate", filtering.ToDate);                    
                 }
                 else
                 {
                     if (filtering.FromDate != default)
-                    {
-                        if (filtering.DOB != default || filtering.SearchQuery != null)
-                        {
+                    {                   
                             baseQuery.Append("AND \"DOB\" > @fromDate ");
-                            command.Parameters.AddWithValue("@fromDate", filtering.FromDate);
-                        }
-                        else
-                        {
-                            baseQuery.Append("WHERE \"DOB\" > @fromDate ");
-                            command.Parameters.AddWithValue("@fromDate", filtering.FromDate);
-                        };
-
+                            command.Parameters.AddWithValue("@fromDate", filtering.FromDate);                   
                     };
                     if (filtering.ToDate != default)
-                    {
-                        if (filtering.DOB != default || filtering.SearchQuery != null)
-                        {
+                    {                    
                             baseQuery.Append("AND \"DOB\" < @toDate ");
                             command.Parameters.AddWithValue("@toDate", filtering.ToDate);
-                        }
-                        else
-                        {
-                            baseQuery.Append("WHERE \"DOB\" < @toDate ");
-                            command.Parameters.AddWithValue("@toDate", filtering.ToDate);
-                        };
-
                     };
                 };
-
+              
+                // getting the number of entries for submiting via PagedList
+                string countQuery = baseQuery.ToString();
+                string result = countQuery.Replace("SELECT * ", "SELECT COUNT(\"Id\") ");
+                command.CommandText = result;
+                object countAfter = await command.ExecuteScalarAsync();
+                int entryCount = Convert.ToInt32(countAfter);
 
                 //adding sorting options to base query 
                 if (sorting.OrderBy != null)
@@ -134,13 +99,14 @@ namespace Hospital.Repository
                 { baseQuery.Append("FETCH NEXT 3 ROWS ONLY;"); };
 
                 // converting baseQuery to string and executing it 
+                
+                
+
                 string query = baseQuery.ToString();
                 command.CommandText = query;
-
                 NpgsqlDataReader reader = await command.ExecuteReaderAsync();
-
                 while (await reader.ReadAsync())
-                {
+                { 
                     patientsList.Add(
                         new Patient()
                         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Hospital.Common
 {
-    public class PagedList<Patient> : List<Patient>
+    public class PagedList<T> : List<T>
     {
         public int CurrentPage { get; private set; }
         public int PageSize { get; private set; }
@@ -17,18 +17,18 @@ namespace Hospital.Common
         public bool HasPrevious => CurrentPage > 1;
         public bool HasNext => CurrentPage < TotalPages;
 
-        public PagedList(List<Patient> patientsList, int pageNumber, int pageSize, int count)
+        public PagedList(List<T> patientsList, int pageNumber, int pageSize, int counter)
         {
             CurrentPage = pageNumber;
             PageSize = pageSize;
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
-            TotalCount = count;
+            TotalPages = (int) Math.Ceiling(counter / (double) pageSize);
+            TotalCount = counter;
             AddRange(patientsList);
         }
 
-        public static PagedList<Patient> ToPagedList(List<Patient> patientsList, int pageNumber, int pageSize, int count)
+        public static PagedList<T> ToPagedList(List<T> patientsList, int pageNumber, int pageSize, int counter)
         {
-            return new PagedList<Patient>(patientsList, pageNumber, pageSize, count);
+            return new PagedList<T>(patientsList, pageNumber, pageSize, counter);
         }
     }
 }
