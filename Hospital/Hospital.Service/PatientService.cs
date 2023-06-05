@@ -14,7 +14,14 @@ namespace Hospital.Service
     {
         public async Task<PagedList<Patient>> GetAllAsync(Sorting sorting, Filtering filtering, Paging paging)
         {
+            //validation for ordering
+            string[] orderBy = { "FirstName", "LastName", "DOB", "AppointmentDate", "AppointmentTime", "WardName" };
 
+            if (sorting.OrderBy != null && !orderBy.Contains( sorting.OrderBy))
+            {
+                throw new Exception();
+            }
+            
             PatientRepository patientRepository = new PatientRepository();
 
             PagedList<Patient> result = await patientRepository.GetAllAsync(sorting, filtering, paging);
