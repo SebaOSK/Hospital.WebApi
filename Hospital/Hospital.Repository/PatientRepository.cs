@@ -68,10 +68,10 @@ namespace Hospital.Repository
               
                 // getting the number of entries for submiting via PagedList
                 string countQuery = baseQuery.ToString();
-                string result = countQuery.Replace("SELECT * ", "SELECT COUNT(\"Id\") ");
-                command.CommandText = result;
-                object countAfter = await command.ExecuteScalarAsync();
-                int entryCount = Convert.ToInt32(countAfter);
+                string count = countQuery.Replace("SELECT * ", "SELECT COUNT(\"Id\") ");
+                command.CommandText = count;
+                object result = await command.ExecuteScalarAsync();
+                int entryCount = Convert.ToInt32(result);
 
                 //adding sorting options to base query 
                 if (sorting.OrderBy != null)
@@ -84,7 +84,6 @@ namespace Hospital.Repository
                 };
 
                 // adding to base query to create paging query
-
                 if (paging.PageNumber != 1)
                 {
                     baseQuery.Append($"OFFSET @offset ");
@@ -98,13 +97,12 @@ namespace Hospital.Repository
                 else
                 { baseQuery.Append("FETCH NEXT 3 ROWS ONLY;"); };
 
-                // converting baseQuery to string and executing it 
-                
-                
-
+                // converting baseQuery to string and executing it                                
                 string query = baseQuery.ToString();
                 command.CommandText = query;
                 NpgsqlDataReader reader = await command.ExecuteReaderAsync();
+
+                //adding result of query to patientsList
                 while (await reader.ReadAsync())
                 { 
                     patientsList.Add(
