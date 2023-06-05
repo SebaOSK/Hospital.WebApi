@@ -37,12 +37,13 @@ namespace Hospital.Repository
                 StringBuilder baseQuery = new StringBuilder("SELECT * FROM \"Hospital\".\"Patient\" ");
 
                 //adding filtering options to base query 
-
+                // filter by search query
                 if (filtering.SearchQuery != null)
                 {
                     baseQuery.Append($"WHERE (\"FirstName\" ILIKE @search OR \"LastName\" ILIKE @search) ");
                     command.Parameters.AddWithValue("@search", "%" + filtering.SearchQuery + "%");
                 };
+                //filter by date of birth
                 if (filtering.DOB != default)
                 {
                     if(filtering.SearchQuery != null)
@@ -50,6 +51,7 @@ namespace Hospital.Repository
                     baseQuery.Append($"WHERE \"DOB\" = @dob ");
                     command.Parameters.AddWithValue("@dob", filtering.DOB);
                 };
+                // filter by from - to date of birth
                 if (filtering.FromDate != default && filtering.ToDate != default)
                 {
                     if (filtering.DOB != default || filtering.SearchQuery != null)
