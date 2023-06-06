@@ -13,6 +13,7 @@ namespace Hospital.Common
         public static string CountQuery(string queryString, string tableName, string columnName)
         {
             List<string> stringsList = new List<string>(queryString.Split(' '));
+
             int element = 0;
             while (element < stringsList.Count())
             {
