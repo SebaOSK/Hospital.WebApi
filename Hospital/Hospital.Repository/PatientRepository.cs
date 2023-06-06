@@ -74,8 +74,9 @@ namespace Hospital.Repository
               
                 // getting the number of entries for submitting via PagedList
                 string countQuery = baseQuery.ToString();
-                string queryRemove = countQuery.Remove(7, 76);
-                string count = queryRemove.Insert(7, "COUNT(\"Patient\".\"Id\") ");
+                /*string queryRemove = countQuery.Remove(7, 76);
+                string count = queryRemove.Insert(7, "COUNT(\"Patient\".\"Id\") ");*/
+                string count = Helper.CountQuery(countQuery, "Patient", "Id");
                 command.CommandText = count;
                 int entryCount = Convert.ToInt32(await command.ExecuteScalarAsync());
 

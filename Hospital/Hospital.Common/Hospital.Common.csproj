@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Filtering.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="PagedList.cs" />
     <Compile Include="Paging.cs" />
     <Compile Include="Sorting.cs" />
