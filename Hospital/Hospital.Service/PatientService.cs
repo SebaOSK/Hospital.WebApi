@@ -6,74 +6,96 @@ using System.Text;
 using System.Threading.Tasks;
 using Hospital.Model;
 using Hospital.Repository;
+using Hospital.Common;
+using Hospital.RepositoryCommon;
 
 namespace Hospital.Service
 {
     public class PatientService : IPatientService
     {
-        public List<Patient> GetAll()
+        public PatientService(IPatientRepository patientRepository)
         {
-            PatientRepository patientList = new PatientRepository();
+            PatientRepository = patientRepository;
+        }
 
-            List<Patient> result = patientList.GetAll();
+        protected IPatientRepository PatientRepository { get; set; }
+        public async Task<PagedList<Patient>> GetAllAsync(Sorting sorting, Filtering filtering, Paging paging)
+        {
+            //validation for ordering
+            string[] orderBy = { "FirstName", "LastName", "DOB", "AppointmentDate", "AppointmentTime", "WardName", "ClinicName" };
 
-            if (patientList != null)
+            if (sorting.OrderBy != null && !orderBy.Contains( sorting.OrderBy))
+            {
+                throw new Exception();
+            }
+
+            PagedList<Patient> result = await PatientRepository.GetAllAsync(sorting, filtering, paging);
+
+            if (result != null)
             {
                 return result;
             };
             return null;
         }
 
-        public List<Patient> GetById(Guid? id)
-        {
-            PatientRepository patientList = new PatientRepository();
+        public async Task<List<Patient>> GetByIdAsync(Guid? id)
+        {           
 
-            List<Patient> result = patientList.GetById(id);
+            List<Patient> result = await PatientRepository.GetByIdAsync(id);
 
-            if (patientList != null)
+            if (result != null)
             {
                 return result;
             };
             return null;
         }
        
-        public bool InsertPatient(Patient newPatient)
+        public async Task<bool> InsertPatientAsync(Patient newPatient)
         {
-            PatientRepository patientList = new PatientRepository();
+            
 
             Guid newGuid = Guid.NewGuid();
 
-            bool result = patientList.InsertPatient(newGuid, newPatient);
+            bool isPatient = await PatientRepository.CheckEntryByIdAsync(newGuid);
 
-
-
-            if (result)
+            if (isPatient)
             {
-                return true;
+                return false;
+            };
+
+            bool isInserted = await PatientRepository.InsertPatientAsync(newGuid, newPatient);
+
+            if (isInserted)
+            { return true; };
+
+            return false;
+        }
+        public async Task<bool> UpdatePatientAsync(Guid? id, Patient updatePatient)
+        {
+            bool isPatient = await PatientRepository.CheckEntryByIdAsync(id);
+
+            if (isPatient)
+            {
+                bool isUpdated = await PatientRepository.UpdatePatientAsync(id, updatePatient);
+                if (isUpdated)
+                { return true; };
             };
 
             return false;
         }
-        public bool UpdatePatient(Guid? id, Patient updatePatient)
-        {
-            PatientRepository patientRepository = new PatientRepository();
-            bool isUpdated = patientRepository.UpdatePatient(id, updatePatient);
-
-            if (isUpdated)
-            { return true; };
-
-            return false;
-        }
       
-        public bool Delete(Guid? id)
+        public async Task<bool> DeletePatientAsync(Guid? id)
         {
-            PatientRepository patientRepository = new PatientRepository();
-            bool isDeleted = patientRepository.DeletePatient(id);
+            bool isPatient = await PatientRepository.CheckEntryByIdAsync(id);
 
-            if (isDeleted)
-            { return true; };
-
-            return false;
+            if (isPatient)
+            {
+                bool isDeleted = await PatientRepository.DeletePatientAsync(id);
+                if (isDeleted)
+                { return true; };
+            };
+            
+            return false;    
         }
     }
 }

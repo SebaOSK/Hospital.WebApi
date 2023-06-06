@@ -1,0 +1,6 @@
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Common\bin\Debug\Hospital.Common.dll
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Common\bin\Debug\Hospital.Common.pdb
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Common\obj\Debug\Hospital.Common.csproj.AssemblyReference.cache
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Common\obj\Debug\Hospital.Common.csproj.CoreCompileInputs.cache
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Common\obj\Debug\Hospital.Common.dll
+C:\Users\Korisnik\Desktop\Hospital.WebApi\Hospital\Hospital.Common\obj\Debug\Hospital.Common.pdb
