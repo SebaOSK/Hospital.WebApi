@@ -36,8 +36,8 @@ namespace Hospital.WebApi.Controllers
         public async Task<HttpResponseMessage> GetAsync(int pageNumber = 1, int pageSize = 3,
                                                         string orderBy = null, string sortOrder = null,
                                                         string searchQuery = null, DateTime? dob = null,
-                                                        DateTime? fromDate = null, DateTime? toDate = null)
-                                                        /*DateTime fromTime = default, DateTime toTime = default)*/
+                                                        DateTime? fromDate = null, DateTime? toDate = null,
+                                                        TimeSpan? fromTime = default, TimeSpan? toTime = default)
         {
             try
             {
@@ -46,9 +46,9 @@ namespace Hospital.WebApi.Controllers
                     SearchQuery = searchQuery,
                     DOB = dob.HasValue ? (DateTime)dob : default,
                     FromDate = fromDate.HasValue ? (DateTime)fromDate : default,
-                    ToDate = toDate.HasValue ? (DateTime)toDate : default
-                    /*FromTime = fromTime,
-                    ToTime = toTime*/
+                    ToDate = toDate.HasValue ? (DateTime)toDate : default,
+                    FromTime = fromTime.HasValue ? (TimeSpan)fromTime : default,
+                    ToTime = toTime.HasValue ? (TimeSpan)toTime : default,
                 };
                 
                 Sorting sorting = new Sorting() { OrderBy = orderBy, SortOrder = sortOrder };

@@ -42,7 +42,8 @@ namespace Hospital.Repository
                 // filter by search query
                 if (filtering.SearchQuery != null)
                 {
-                    baseQuery.Append($"AND (\"FirstName\" ILIKE @search OR \"LastName\" ILIKE @search) ");
+                    baseQuery.Append($"AND (\"FirstName\" ILIKE @search OR \"LastName\" ILIKE @search OR \"WardName\" ILIKE @search OR \"ClinicName\" ILIKE @search) ");
+                    //baseQuery.Append(" ");
                     command.Parameters.AddWithValue("@search", "%" + filtering.SearchQuery + "%");
                 };
                 //filter by date of birth
@@ -54,7 +55,7 @@ namespace Hospital.Repository
                 // filter by from - to date of birth
                 if (filtering.FromDate != default && filtering.ToDate != default)
                 {
-                        baseQuery.Append("AND \"DOB\" BETWEEN @fromDate AND @toDate ");
+                        baseQuery.Append("AND \"AppointmentDate\" BETWEEN @fromDate AND @toDate ");
                         command.Parameters.AddWithValue("@fromDate", filtering.FromDate);
                         command.Parameters.AddWithValue("@toDate", filtering.ToDate);                    
                 }
@@ -62,20 +63,42 @@ namespace Hospital.Repository
                 {
                     if (filtering.FromDate != default)
                     {                   
-                            baseQuery.Append("AND \"DOB\" > @fromDate ");
+                            baseQuery.Append("AND \"AppointmentDate\" > @fromDate ");
                             command.Parameters.AddWithValue("@fromDate", filtering.FromDate);                   
                     };
                     if (filtering.ToDate != default)
                     {                    
-                            baseQuery.Append("AND \"DOB\" < @toDate ");
+                            baseQuery.Append("AND \"AppointmentDate\" < @toDate ");
                             command.Parameters.AddWithValue("@toDate", filtering.ToDate);
                     };
                 };
-              
+                // filtering by appointment time
+                if (filtering.FromTime != default && filtering.ToTime != default)
+                {
+                    baseQuery.Append("AND \"AppointmentTime\" BETWEEN @fromTime AND @toTime ");
+                    command.Parameters.AddWithValue("@fromTime", filtering.FromTime);
+                    command.Parameters.AddWithValue("@toTime", filtering.ToTime);
+                }
+                else
+                {
+                    if (filtering.FromTime != default)
+                    {
+                        baseQuery.Append("AND \"AppointmentTime\" > @fromTime ");
+                        command.Parameters.AddWithValue("@fromTime", filtering.FromTime);
+                    };
+                    if (filtering.ToTime != default)
+                    {
+                        baseQuery.Append("AND \"AppointmentTime\" < @toTime ");
+                        command.Parameters.AddWithValue("@toTime", filtering.ToTime);
+                    };
+                };
+
+
                 // getting the number of entries for submitting via PagedList
                 string countQuery = baseQuery.ToString();
-                string queryRemove = countQuery.Remove(7, 76);
-                string count = queryRemove.Insert(7, "COUNT(\"Patient\".\"Id\") ");
+                /*string queryRemove = countQuery.Remove(7, 76);
+                string count = queryRemove.Insert(7, "COUNT(\"Patient\".\"Id\") ");*/
+                string count = Helper.CountQuery(countQuery, "Patient", "Id");
                 command.CommandText = count;
                 int entryCount = Convert.ToInt32(await command.ExecuteScalarAsync());
 
