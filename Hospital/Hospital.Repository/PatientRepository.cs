@@ -95,7 +95,9 @@ namespace Hospital.Repository
                     command.Parameters.AddWithValue("@next", paging.PageSize);
                 }
                 else
-                { baseQuery.Append("FETCH NEXT 3 ROWS ONLY;"); };
+                { baseQuery.Append("FETCH NEXT @default ROWS ONLY;");
+                    command.Parameters.AddWithValue("@default", paging.PageSize);
+                };
 
                 // converting baseQuery to string and executing it                                
                 string query = baseQuery.ToString();

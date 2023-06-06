@@ -53,6 +53,10 @@
       <Project>{3d060981-fa59-48dc-8be3-dd525828d4f4}</Project>
       <Name>Hospital.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Hospital.RepositoryCommon\Hospital.RepositoryCommon.csproj">
+      <Project>{62f57be4-d259-4ed8-90b4-2e30c14e9918}</Project>
+      <Name>Hospital.RepositoryCommon</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Hospital.Repository\Hospital.Repository.csproj">
       <Project>{67016ff2-1cc0-41f1-b1b2-a43b7a0b4d58}</Project>
       <Name>Hospital.Repository</Name>

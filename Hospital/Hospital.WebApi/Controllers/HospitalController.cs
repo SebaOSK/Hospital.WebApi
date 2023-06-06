@@ -2,6 +2,7 @@
 using Hospital.Model;
 using Hospital.Repository;
 using Hospital.Service;
+using Hospital.ServiceCommon;
 using Hospital.WebApi.Models;
 using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
@@ -23,6 +24,13 @@ namespace Hospital.WebApi.Controllers
 {
     public class HospitalController : ApiController
     {
+        public HospitalController(IPatientService patientService) 
+        {
+            PatientService = patientService;
+        }
+
+        protected IPatientService PatientService { get; set; }
+
         static string connectionString = "Server=localhost;Port=5432;User Id=postgres;Password=jebeniPOSTgreSQL;Database=postgres";
 
         // GET: api/Hospital
@@ -48,9 +56,9 @@ namespace Hospital.WebApi.Controllers
 
                 Paging paging = new Paging() { PageNumber = pageNumber, PageSize = pageSize };
 
-                PatientService patientsService = new PatientService();
+               
 
-                PagedList<Patient> result = await patientsService.GetAllAsync(sorting, filtering, paging);
+                PagedList<Patient> result = await PatientService.GetAllAsync(sorting, filtering, paging);
 
                 if (result != null)
                 {
@@ -101,8 +109,7 @@ namespace Hospital.WebApi.Controllers
         {
             try
             {
-                PatientService patientService = new PatientService();
-                List<Patient> result = await patientService.GetByIdAsync(id);
+                List<Patient> result = await PatientService.GetByIdAsync(id);
 
                 List<RESTPatient> restPatient = new List<RESTPatient>();
 
@@ -137,8 +144,7 @@ namespace Hospital.WebApi.Controllers
         {
             try
             {
-                PatientService patientService = new PatientService();
-                bool isInserted = await patientService.InsertPatientAsync(newPatient);
+                bool isInserted = await PatientService.InsertPatientAsync(newPatient);
 
                 if (isInserted)
                 {
@@ -158,8 +164,8 @@ namespace Hospital.WebApi.Controllers
         {
             try
             {
-                PatientService patientService = new PatientService();
-                bool isUpdated = await patientService.UpdatePatientAsync(id, updatePatient);
+                
+                bool isUpdated = await PatientService.UpdatePatientAsync(id, updatePatient);
 
                 if (isUpdated)
                 {
@@ -178,8 +184,7 @@ namespace Hospital.WebApi.Controllers
         {
             try
             {
-                PatientService patientService = new PatientService();
-                bool isDeleted = await patientService.DeletePatientAsync(id);
+                bool isDeleted = await PatientService.DeletePatientAsync(id);
 
                 if (isDeleted)
                 {
