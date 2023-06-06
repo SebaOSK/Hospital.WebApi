@@ -30,8 +30,14 @@ namespace Hospital.Repository
                 command.Connection = connection;
                 connection.Open();
 
-                // a base query 
-                StringBuilder baseQuery = new StringBuilder("SELECT * FROM \"Hospital\".\"Patient\" WHERE 1 = 1 ");
+                // a base query, selecting all data from Patient table, and some needed columns from other tables -> Appointment, Ward, Clinic
+                StringBuilder baseQuery = new StringBuilder("SELECT \"Patient\".*, \"AppointmentDate\", \"AppointmentTime\", \"WardName\", \"ClinicName\" ");
+                baseQuery.Append("FROM \"Hospital\".\"Patient\" ");
+                baseQuery.Append("INNER JOIN \"Hospital\".\"Appointment\" ON \"Patient\".\"Id\" = \"Appointment\".\"PatientId\" ");
+                baseQuery.Append("INNER JOIN \"Hospital\".\"Ward\" ON \"Appointment\".\"WardId\" = \"Ward\".\"Id\" ");
+                baseQuery.Append("INNER JOIN \"Hospital\".\"Clinic\" ON \"Ward\".\"ClinicId\" = \"Clinic\".\"Id\" ");
+                baseQuery.Append("WHERE 1 = 1 ");
+
                 //adding filtering options to base query 
                 // filter by search query
                 if (filtering.SearchQuery != null)
@@ -66,12 +72,12 @@ namespace Hospital.Repository
                     };
                 };
               
-                // getting the number of entries for submiting via PagedList
+                // getting the number of entries for submitting via PagedList
                 string countQuery = baseQuery.ToString();
-                string count = countQuery.Replace("SELECT * ", "SELECT COUNT(\"Id\") ");
+                string queryRemove = countQuery.Remove(7, 76);
+                string count = queryRemove.Insert(7, "COUNT(\"Patient\".\"Id\") ");
                 command.CommandText = count;
-                object result = await command.ExecuteScalarAsync();
-                int entryCount = Convert.ToInt32(result);
+                int entryCount = Convert.ToInt32(await command.ExecuteScalarAsync());
 
                 //adding sorting options to base query 
                 if (sorting.OrderBy != null)
@@ -83,7 +89,7 @@ namespace Hospital.Repository
                     };
                 };
 
-                // adding to base query to create paging query
+                // adding paging options base query
                 if (paging.PageNumber != 1)
                 {
                     baseQuery.Append($"OFFSET @offset ");
@@ -117,6 +123,10 @@ namespace Hospital.Repository
                             DOB = (DateTime)reader["DOB"],
                             PhoneNumber = (string)reader["PhoneNumber"],
                             EmergencyContact = (string)reader["EmergencyContact"],
+                            AppointmentDate = (DateTime)reader["AppointmentDate"],
+                            AppointmentTime = (TimeSpan)reader["AppointmentTime"],
+                            WardName = (string)reader["WardName"],
+                            ClinicName = (string)reader["ClinicName"]
 
                         });
                 };

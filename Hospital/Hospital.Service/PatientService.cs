@@ -22,7 +22,7 @@ namespace Hospital.Service
         public async Task<PagedList<Patient>> GetAllAsync(Sorting sorting, Filtering filtering, Paging paging)
         {
             //validation for ordering
-            string[] orderBy = { "FirstName", "LastName", "DOB", "AppointmentDate", "AppointmentTime", "WardName" };
+            string[] orderBy = { "FirstName", "LastName", "DOB", "AppointmentDate", "AppointmentTime", "WardName", "ClinicName" };
 
             if (sorting.OrderBy != null && !orderBy.Contains( sorting.OrderBy))
             {

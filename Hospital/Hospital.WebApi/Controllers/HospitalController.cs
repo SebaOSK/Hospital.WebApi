@@ -1,6 +1,5 @@
 ﻿using Hospital.Common;
 using Hospital.Model;
-using Hospital.Repository;
 using Hospital.Service;
 using Hospital.ServiceCommon;
 using Hospital.WebApi.Models;
@@ -73,7 +72,11 @@ namespace Hospital.WebApi.Controllers
                             LastName = result[counter].LastName,
                             DOB = result[counter].DOB,
                             PhoneNumber = result[counter].PhoneNumber,                            
-                            EmergencyContact = result[counter].EmergencyContact 
+                            EmergencyContact = result[counter].EmergencyContact,
+                            AppointmentDate = result[counter].AppointmentDate,
+                            AppointmentTime = result[counter].AppointmentTime,
+                            WardName = result[counter].WardName,
+                            ClinicName = result[counter].ClinicName
                         });
                     };
 

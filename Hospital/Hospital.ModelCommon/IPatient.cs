@@ -14,5 +14,10 @@ namespace Hospital.ModelCommon
         DateTime? DOB { get; set; }
         string PhoneNumber { get; set; }
         string EmergencyContact { get; set; }
+
+        DateTime? AppointmentDate { get; set; }
+        TimeSpan? AppointmentTime { get; set; }
+        string WardName { get; set; }
+        string ClinicName { get; set; }
     }
 }

@@ -375,7 +375,7 @@
       <Name>Hospital.RepositoryCommon</Name>
     </ProjectReference>
     <ProjectReference Include="..\Hospital.Repository\Hospital.Repository.csproj">
-      <Project>{67016ff2-1cc0-41f1-b1b2-a43b7a0b4d58}</Project>
+      <Project>{67016FF2-1CC0-41F1-B1B2-A43B7A0B4D58}</Project>
       <Name>Hospital.Repository</Name>
     </ProjectReference>
     <ProjectReference Include="..\Hospital.ServiceCommon\Hospital.ServiceCommon.csproj">
